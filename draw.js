@@ -1,0 +1,614 @@
+let cbCtx = null;
+
+function drawFruit(position, mainColor) {
+
+  let x = position[1] * 20;
+  let y = position[0] * 20;
+  cbCtx.fillStyle = Color.SOIL;
+  cbCtx.fillRect(x, y, 20, 20);
+
+  // main part
+  cbCtx.beginPath();
+  cbCtx.arc(x + 10, y + 10, 8, 0, 2 * Math.PI);
+  cbCtx.fillStyle = mainColor;
+  cbCtx.fill();
+
+  // stem cavity
+  cbCtx.beginPath();
+  cbCtx.arc(x + 10, y, 4, 0, -1 * Math.PI);
+  cbCtx.fillStyle = Color.SOIL;
+  cbCtx.fill();
+
+  // basin
+  cbCtx.beginPath();
+  cbCtx.arc(x + 10, y + 20, 4, Math.PI, 0);
+  cbCtx.fillStyle = Color.SOIL;
+  cbCtx.fill();
+
+  // leaf
+  cbCtx.beginPath();
+  cbCtx.fillStyle = Color.LEAF;
+  cbCtx.moveTo(x + 14, y);
+  cbCtx.lineTo(x + 10, y + 4);
+  cbCtx.lineTo(x + 16, y + 2);
+  cbCtx.closePath();
+  cbCtx.fill();
+
+  //stem
+  cbCtx.beginPath();
+  cbCtx.fillStyle = Color.STEM;
+  cbCtx.moveTo(x + 11, y);
+  cbCtx.lineTo(x + 10, y + 4);
+  cbCtx.lineTo(x + 12, y + 0);
+  cbCtx.closePath();
+  cbCtx.fill();
+
+  //shine
+  drawShine(position, Color.SHINE);
+}
+
+function drawSquare(position, cellContent) {
+
+  if (cellContent === CellContent.HEAD ||
+    cellContent === CellContent.BODY ||
+    cellContent === CellContent.JUMP) {
+    // player parts are handled separately
+    return;
+  }
+
+  if (cellContent === CellContent.SPACE) {
+    drawRawSquare(position, Color.SOIL);
+  } else if (cellContent === CellContent.WALL) {
+    drawRawSquare(position, Color.WALL);
+  } else if (cellContent === CellContent.KILLING_FRUIT) {
+    drawFruit(position, Color.KILLING_FRUIT);
+    return;
+  } else if (cellContent === CellContent.FRUIT) {
+    drawFruit(position, Color.FRUIT);
+    return;
+  }
+}
+
+function drawRawSquare(position, color) {
+  let x = position[1] * 20;
+  let y = position[0] * 20;
+
+  cbCtx.fillStyle = color;
+  cbCtx.fillRect(x, y, 20, 20);
+}
+
+function drawShine(position, color) {
+  let x = position[1] * 20;
+  let y = position[0] * 20;
+  cbCtx.beginPath();
+  cbCtx.fillStyle = color;
+  cbCtx.moveTo(x + 14, y + 5);
+  cbCtx.lineTo(x + 14, y + 9);
+  cbCtx.lineTo(x + 16, y + 7);
+  cbCtx.closePath();
+  cbCtx.fill();
+}
+
+function drawJumpDetails(position, color) {
+  let x = position[1] * 20;
+  let y = position[0] * 20;
+  cbCtx.beginPath();
+  cbCtx.fillStyle = color;
+  cbCtx.moveTo(x + 14 - 4, y + 5 + 1);
+  cbCtx.lineTo(x + 14 - 4, y + 9 + 1);
+  cbCtx.lineTo(x + 16 - 4, y + 7 + 1);
+  cbCtx.closePath();
+  cbCtx.fill();
+
+  let keyExtraLocationData = locationToKey(position);
+  let direction = GBD.extraLocationData.get(keyExtraLocationData);
+
+  if (Direction.RIGHT === direction || Direction.LEFT === direction) {
+    cbCtx.beginPath();
+    cbCtx.strokeStyle = Color.JUMP_MARK;
+    cbCtx.moveTo(x + 2, y + 2);
+    cbCtx.lineTo(x + 5, y + 4);
+    cbCtx.lineTo(x + 15, y + 4);
+    cbCtx.lineTo(x + 18, y + 2);
+    cbCtx.stroke();
+
+    cbCtx.beginPath();
+    cbCtx.strokeStyle = Color.JUMP_MARK;
+    cbCtx.moveTo(x + 2, y + 18);
+    cbCtx.lineTo(x + 5, y + 16);
+    cbCtx.lineTo(x + 15, y + 16);
+    cbCtx.lineTo(x + 18, y + 18);
+    cbCtx.stroke();
+  } else if (Direction.UP === direction || Direction.DOWN === direction) {
+    cbCtx.beginPath();
+    cbCtx.strokeStyle = Color.JUMP_MARK;
+    cbCtx.moveTo(x + 2, y + 2);
+    cbCtx.lineTo(x + 4, y + 5);
+    cbCtx.lineTo(x + 4, y + 15);
+    cbCtx.lineTo(x + 2, y + 18);
+    cbCtx.stroke();
+
+    cbCtx.beginPath();
+    cbCtx.strokeStyle = Color.JUMP_MARK;
+    cbCtx.moveTo(x + 18, y + 2);
+    cbCtx.lineTo(x + 16, y + 5);
+    cbCtx.lineTo(x + 16, y + 15);
+    cbCtx.lineTo(x + 18, y + 18);
+    cbCtx.stroke();
+  }
+
+}
+
+function drawLittlePlayerBodyJump(position, toggle) {
+  drawLittlePlayerBodyPivotWithColor(position, toggle, Color.BODY);
+  drawJumpDetails(position, Color.SHINE);
+}
+
+function drawLittlePlayerBodyJumpDeath(position, toggle, color) {
+  drawLittlePlayerBodyPivotWithColor(position, toggle, color);
+  drawJumpDetails(position, Color.SHINE);
+}
+
+function drawLittlePlayerBodyJumpWithColor(position, toggle, color) {
+  drawLittlePlayerBodyPivot(position, toggle, color);
+  drawJumpDetails(position, Color.SHINE);
+}
+
+function drawLittlePlayerWavyBody(position, toggle) {
+  drawLittlePlayerWavyBodyWithColor(position, toggle, Color.BODY);
+}
+
+function drawLittlePlayerWavyBodyDeath(position, toggle, color) {
+  drawLittlePlayerWavyBodyWithColor(position, toggle, color);
+}
+
+function drawLittlePlayerWavyBodyWithColor(position, toggle, color) {
+
+  let x = position[1] * 20;
+  let y = position[0] * 20;
+
+  cbCtx.fillStyle = Color.SOIL;
+  cbCtx.fillRect(x, y, 20, 20);
+
+  let keyExtraLocationData = locationToKey(position);
+  let direction = GBD.extraLocationData.get(keyExtraLocationData);
+
+  if (direction === Direction.RIGHT) {
+
+    let col = position[1];
+    let offSet = (toggle + col) % 2;
+    if (offSet == 0) {
+      offSet = 1;
+    } else {
+      offSet = - 1;
+    }
+
+    x = position[1] * 20;
+    y = position[0] * 20 + 1 + offSet;
+    cbCtx.fillStyle = color;
+    cbCtx.fillRect(x, y + 2, 20, 18 - 4);
+
+    cbCtx.fillRect(x + 4, y, 20 - 6, 2);
+    cbCtx.fillRect(x + 4, y + 16, 20 - 6, 2);
+
+  } else if (direction === Direction.LEFT) {
+
+    let col = position[1];
+    let offSet = (toggle + col) % 2;
+    if (offSet == 0) {
+      offSet = 1;
+    } else {
+      offSet = - 1;
+    }
+
+    x = position[1] * 20;
+    y = position[0] * 20 + 1 + offSet;
+    cbCtx.fillStyle = color;
+    cbCtx.fillRect(x, y + 2, 20, 18 - 4);
+
+    cbCtx.fillRect(x + 4, y, 20 - 6, 2);
+    cbCtx.fillRect(x + 4, y + 16, 20 - 6, 2);
+
+  } else if (direction === Direction.UP) {
+
+    let row = position[0];
+    let offSet = (toggle + row) % 2;
+    if (offSet == 0) {
+      offSet = 1;
+    } else {
+      offSet = - 1;
+    }
+
+    x = position[1] * 20 + 1 + offSet;
+    y = position[0] * 20;
+    cbCtx.fillStyle = color;
+    cbCtx.fillRect(x + 2, y, 18 - 4, 20);
+
+    cbCtx.fillRect(x, y + 4, 2, 20 - 6);
+    cbCtx.fillRect(x + 16, y + 4, 2, 20 - 6);
+
+  } else if (direction === Direction.DOWN) {
+
+    let row = position[0];
+    let offSet = (toggle + row) % 2;
+    if (offSet == 0) {
+      offSet = 1;
+    } else {
+      offSet = - 1;
+    }
+
+    x = position[1] * 20 + 1 + offSet;
+    y = position[0] * 20;
+    cbCtx.fillStyle = color;
+    cbCtx.fillRect(x + 2, y, 18 - 4, 20);
+
+    cbCtx.fillRect(x, y + 4, 2, 20 - 6);
+    cbCtx.fillRect(x + 16, y + 4, 2, 20 - 6);
+  }
+}
+
+function drawLittlePlayerTail(position) {
+  drawLittlePlayerTailWithColor(position, Color.BODY);
+}
+
+function drawLittlePlayerTailDeath(position, color) {
+  drawLittlePlayerTailWithColor(position, color);
+}
+
+function drawLittlePlayerTailWithColor(position, color) {
+
+  let x = position[1] * 20;
+  let y = position[0] * 20;
+
+  cbCtx.fillStyle = Color.SOIL;;
+  cbCtx.fillRect(x, y, 20, 20);
+
+  let keyExtraLocationData = locationToKey(position);
+  let direction = GBD.extraLocationData.get(keyExtraLocationData);
+
+  if (direction === Direction.RIGHT) {
+
+    x = position[1] * 20;
+    y = position[0] * 20;
+    cbCtx.fillStyle = color;
+    cbCtx.fillRect(x, y + 8, 20, 4);
+
+    cbCtx.beginPath();
+    cbCtx.fillStyle = color;
+    cbCtx.moveTo(x + 0, y + 10);
+    cbCtx.lineTo(x + 20, y + 16);
+    cbCtx.lineTo(x + 20, y + 4);
+    cbCtx.closePath();
+    cbCtx.fill();
+
+  } else if (direction === Direction.LEFT) {
+
+    x = position[1] * 20;
+    y = position[0] * 20;
+    cbCtx.fillStyle = color;
+    cbCtx.fillRect(x, y + 8, 20, 4);
+
+    cbCtx.beginPath();
+    cbCtx.fillStyle = color;
+    cbCtx.moveTo(x + 20, y + 10);
+    cbCtx.lineTo(x + 0, y + 16);
+    cbCtx.lineTo(x + 0, y + 4);
+    cbCtx.closePath();
+    cbCtx.fill();
+
+  } else if (direction === Direction.UP) {
+
+    x = position[1] * 20;
+    y = position[0] * 20;
+    cbCtx.fillStyle = color;
+    cbCtx.fillRect(x + 8, y, 4, 20);
+
+    cbCtx.beginPath();
+    cbCtx.fillStyle = color;
+    cbCtx.moveTo(x + 4, y + 0);
+    cbCtx.lineTo(x + 10, y + 20);
+    cbCtx.lineTo(x + 16, y + 0);
+    cbCtx.closePath();
+    cbCtx.fill();
+
+  } else if (direction === Direction.DOWN) {
+
+    x = position[1] * 20;
+    y = position[0] * 20;
+    cbCtx.fillStyle = color;
+    cbCtx.fillRect(x + 8, y, 4, 20);
+
+    cbCtx.beginPath();
+    cbCtx.fillStyle = color;
+    cbCtx.moveTo(x + 4, y + 20);
+    cbCtx.lineTo(x + 10, y + 0);
+    cbCtx.lineTo(x + 16, y + 20);
+    cbCtx.closePath();
+    cbCtx.fill();
+
+  }
+}
+
+function positionToXY(position) {
+  return {
+    x: position[1] * 20,
+    y: position[0] * 20,
+  };
+}
+
+function drawLittlePlayerBodyPivot(position, toggle) {
+  drawLittlePlayerBodyPivotWithColor(position, toggle, Color.BODY);
+}
+
+function drawLittlePlayerBodyPivotDeath(position, toggle, color) {
+  drawLittlePlayerBodyPivotWithColor(position, toggle, color);
+}
+
+function drawLittlePlayerBodyPivotWithColor(position, toggle, color) {
+
+  let headDirection = LPD.headDirection;
+  let headPosition = LPD.headPositionCurrent;
+
+  let coord = positionToXY(position);
+  cbCtx.fillStyle = Color.SOIL;
+  cbCtx.fillRect(coord.x, coord.y, 20, 20);
+
+  cbCtx.beginPath();
+  cbCtx.arc(coord.x + 10, coord.y + 10, 10, 0, 2 * Math.PI);
+  cbCtx.fillStyle = color;
+  cbCtx.fill();
+
+  // centered square
+  cbCtx.fillRect(coord.x + 2, coord.y + 2, 16, 16);
+
+  // horizontal rect
+  cbCtx.fillRect(coord.x + 0, coord.y + 3, 20, 14);
+
+  // vertical rect
+  cbCtx.fillRect(coord.x + 3, coord.y + 0, 14, 20);
+}
+
+function drawLittlePlayerHead() {
+  drawLittlePlayerHeadWithColor(Color.BODY);
+}
+
+function drawLittlePlayerHeadDeath(color) {
+  drawLittlePlayerHeadWithColor(color);
+}
+
+function drawLittlePlayerHeadWithColor(color) {
+
+  let headDirection = LPD.headDirection;
+  let headPosition = LPD.headPositionCurrent;
+
+  let x = headPosition[1] * 20;
+  let y = headPosition[0] * 20;
+  cbCtx.fillStyle = Color.SOIL;
+  cbCtx.fillRect(x, y, 20, 20);
+
+  if (headDirection === Direction.RIGHT) {
+
+    // head
+    cbCtx.beginPath();
+    cbCtx.arc(x + 10, y + 10, 10, 0, 2 * Math.PI);
+    cbCtx.fillStyle = color;
+    cbCtx.fill();
+
+    //neck
+    cbCtx.fillRect(x + 0, y + 3, 10, 14);
+
+    // tongue
+    cbCtx.fillStyle = Color.TONGUE;
+    cbCtx.fillRect(x + 20, y + 9, 6, 2);
+
+    // tongue tips
+    cbCtx.fillRect(x + 26, y + 8, 2, 1);
+    cbCtx.fillRect(x + 26, y + 11, 2, 1);
+
+    // eyes         
+    cbCtx.fillStyle = Color.EYE;
+    cbCtx.fillRect(x + 13, y + 5, 3, 2);
+    cbCtx.fillRect(x + 13, y + 13, 3, 2);
+
+
+
+  } else if (headDirection === Direction.LEFT) {
+
+    // head
+    cbCtx.beginPath();
+    cbCtx.arc(x + 10, y + 10, 10, 0, 2 * Math.PI);
+    cbCtx.fillStyle = color;
+    cbCtx.fill();
+
+    //neck
+    cbCtx.fillRect(x + 10, y + 3, 10, 14);
+
+    // tongue
+    cbCtx.fillStyle = Color.TONGUE;
+    cbCtx.fillRect(x - 6, y + 9, 6, 2);
+
+    // tongue tips
+    cbCtx.fillRect(x - 8, y + 8, 2, 1);
+    cbCtx.fillRect(x - 8, y + 11, 2, 1);
+
+    // eyes         
+    cbCtx.fillStyle = Color.EYE;
+    cbCtx.fillRect(x + 4, y + 5, 3, 2);
+    cbCtx.fillRect(x + 4, y + 13, 3, 2);
+
+  } else if (headDirection === Direction.UP) {
+
+    // head        
+    cbCtx.beginPath();
+    cbCtx.arc(x + 10, y + 10, 10, 0, 2 * Math.PI);
+    cbCtx.fillStyle = color;
+    cbCtx.fill();
+
+    //neck
+    cbCtx.fillRect(x + 3, y + 10, 14, 10);
+
+    // tongue
+    cbCtx.fillStyle = Color.TONGUE;
+    cbCtx.fillRect(x + 9, y - 6, 2, 6);
+
+    // tongue tips
+    cbCtx.fillRect(x + 8, y - 7, 1, 2);
+    cbCtx.fillRect(x + 11, y - 7, 1, 2);
+
+    // eyes         
+    cbCtx.fillStyle = Color.EYE;
+    cbCtx.fillRect(x + 5, y + 4, 2, 3);
+    cbCtx.fillRect(x + 13, y + 4, 2, 3);
+
+  } else if (headDirection === Direction.DOWN) {
+
+    // head         
+    cbCtx.beginPath();
+    cbCtx.arc(x + 10, y + 10, 10, 0, 2 * Math.PI);
+    cbCtx.fillStyle = color;
+    cbCtx.fill();
+
+    //neck
+    cbCtx.fillRect(x + 3, y + 0, 14, 10);
+
+    cbCtx.fillStyle = Color.TONGUE;
+    cbCtx.fillRect(x + 9, y + 20, 2, 6);
+
+    // tongue tips
+    cbCtx.fillRect(x + 8, y + 26, 1, 2);
+    cbCtx.fillRect(x + 11, y + 26, 1, 2);
+
+    // eyes         
+    cbCtx.fillStyle = Color.EYE;
+    cbCtx.fillRect(x + 5, y + 13, 2, 3);
+    cbCtx.fillRect(x + 13, y + 13, 2, 3);
+
+  }
+  reDrawLittlePlayerHeadSourroundingsToHideOldTongue();
+}
+
+function reDrawLittlePlayerHeadSourroundingsToHideOldTongue() {
+  let headDirection = LPD.headDirection;
+  let headPosition = LPD.headPositionCurrent;
+
+  let row = headPosition[0];
+  let col = headPosition[1];
+  let positionToReDraw = null;
+
+  if (headDirection === Direction.RIGHT) {
+
+    reDrawSquare([row - 1, col - 1]);
+    reDrawSquare([row + 1, col - 1]);
+
+  } else if (headDirection === Direction.LEFT) {
+
+    reDrawSquare([row - 1, col + 1]);
+    reDrawSquare([row + 1, col + 1]);
+
+  } else if (headDirection === Direction.UP) {
+
+    reDrawSquare([row + 1, col + 1]);
+    reDrawSquare([row + 1, col - 1]);
+
+  } else if (headDirection === Direction.DOWN) {
+
+    reDrawSquare([row - 1, col + 1]);
+    reDrawSquare([row - 1, col - 1]);
+
+  }
+
+}
+
+function clearHeadSourroundings() {
+  let headPosition = LPD.headPositionCurrent;
+
+  let row = headPosition[0];
+  let col = headPosition[1];
+
+  reDrawSquare([row - 1, col - 1]);
+  reDrawSquare([row - 1, col + 0]);
+  reDrawSquare([row - 1, col + 1]);
+  reDrawSquare([row + 0, col - 1]);
+  reDrawSquare([row + 0, col + 0]);
+  reDrawSquare([row + 0, col + 1]);
+  reDrawSquare([row + 1, col - 1]);
+  reDrawSquare([row + 1, col + 0]);
+  reDrawSquare([row + 1, col + 1]);
+}
+
+function reDrawSquare(positionToReDraw) {
+  let cellContent = getCellContent(positionToReDraw);
+  drawSquare(positionToReDraw, cellContent);
+}
+
+async function drawPlayer() {
+  let toggle = 0;
+  while (true) {
+    if (!RD.paused && !RD.gameOver) {
+      drawPlayerSync(toggle);
+    }
+    await aDelay(RD.delayInterval / 2);
+    toggle = (toggle + 1) % 4;
+  }
+}
+
+
+function drawPlayerSync(toggle) {
+  for (let i = LPD.playerTailIndex; i < LPD.playerHeadIndex; i++) {
+    let position = LPD.getLocationAtIndex(i);
+    if (getCellContent(position) === CellContent.JUMP) {
+      drawLittlePlayerBodyJump(position, toggle);
+    } else {
+      if (i == LPD.playerTailIndex) {
+        drawLittlePlayerTail(position, toggle);
+      } else {
+        let positionBefore = LPD.getLocationAtIndex(i - 1);
+        let position = LPD.getLocationAtIndex(i);
+        let positionAfter = LPD.getLocationAtIndex(i + 1);
+        if (positionBefore[0] != positionAfter[0] && positionBefore[1] != positionAfter[1]) {
+          // its a pivot
+          drawLittlePlayerBodyPivot(position, toggle);
+        } else {
+          // regular body part
+          drawLittlePlayerWavyBody(position, toggle);
+        }
+      }
+    }
+  }
+  drawLittlePlayerHead();
+}
+
+function drawPlayerDeathSync(toggle, color) {
+  drawPlayerDeath(toggle, color);
+}
+
+
+async function drawPlayerDeath(toggle, color) {
+  await aDelay(RD.deathDelay);
+  drawLittlePlayerHeadDeath(color);
+  for (let i = LPD.playerHeadIndex - 1; i >= LPD.playerTailIndex; i--) {
+    let position = LPD.getLocationAtIndex(i);
+    if (getCellContent(position) === CellContent.JUMP) {
+      await aDelay(RD.deathDelay);
+      drawLittlePlayerBodyJumpDeath(position, toggle, color);
+    } else {
+      if (i == LPD.playerTailIndex) {
+        await aDelay(RD.deathDelay);
+        drawLittlePlayerTailDeath(position, color);
+      } else {
+        let positionBefore = LPD.getLocationAtIndex(i - 1);
+        let position = LPD.getLocationAtIndex(i);
+        let positionAfter = LPD.getLocationAtIndex(i + 1);
+        if (positionBefore[0] != positionAfter[0] && positionBefore[1] != positionAfter[1]) {
+          // its a pivot
+          await aDelay(RD.deathDelay);
+          drawLittlePlayerBodyPivotDeath(position, toggle, color);
+        } else {
+          // regular body part
+          await aDelay(RD.deathDelay);
+          drawLittlePlayerWavyBodyDeath(position, toggle, color);
+        }
+      }
+    }
+  }
+}

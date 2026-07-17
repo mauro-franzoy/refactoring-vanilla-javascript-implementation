@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <script src="constants.js"></script>
+  <script src="state.js"></script>
+  <script src="draw.js"></script>
+  <script src="logic.js"></script>
+
+</head>
+
+<body style="background-color: Gainsboro; font-family: sans-serif; font-size: 12px;">
+
+  <div id="wrapper">
+
+    <div id="header">
+      <span id="title" style="display: block; text-align: center; font-family: sans-serif; font-size: 28px;">A vanilla JavaScript implementation</span><br>
+    </div>
+
+    <div id="mainBoardContainer" style="display:flex; gap: 30px; justify-content: center;">
+      <div id="leftpanel" style="display:flex; align-items: flex-start; width: 206px; position: relative; height: 480;">
+        
+
+        <div id="hiddendetailscontainer">
+          <span id="barebonestitle" style="font-family: sans-serif; font-size: 20px;">The bare bones: </span>
+          <div id="barebonestoggle" style="display: inline-block; background-color: silver; width: 46px; height: 15px; text-align: center; margin-bottom: 3px; padding-top: 0px; border-radius: 6px; cursor: pointer; user-select: none;" onclick="toggleBareBones()">
+            see
+          </div>
+          
+          <div id="ovarlayBonesContainer" style="background-color: Silver; position: relative; border: 1px solid #ccc; font-size: 14px;">
+          
+            <div id="characterBoard" style="gap: 0; line-height: 1;">
+
+              <code id="row_0" style="white-space: pre;"></code><br>
+
+              <code id="row_1" style="white-space: pre;"></code><br>
+
+              <code id="row_2" style="white-space: pre;"></code><br>
+
+              <code id="row_3" style="white-space: pre;"></code><br>
+
+              <code id="row_4" style="white-space: pre;"></code><br>
+
+              <code id="row_5" style="white-space: pre;"></code><br>
+
+              <code id="row_6" style="white-space: pre;"></code><br>
+
+              <code id="row_7" style="white-space: pre;"></code><br>
+
+              <code id="row_8" style="white-space: pre;"></code><br>
+
+              <code id="row_9" style="white-space: pre;"></code><br>
+
+              <code id="row_10" style="white-space: pre;"></code><br>
+
+              <code id="row_11" style="white-space: pre;"></code><br>
+
+              <code id="row_12" style="white-space: pre;"></code><br>
+
+              <code id="row_13" style="white-space: pre;"></code><br>
+
+              <code id="row_14" style="white-space: pre;"></code><br>
+
+              <code id="row_15" style="white-space: pre;"></code><br>
+
+              <code id="row_16" style="white-space: pre;"></code><br>
+
+              <code id="row_17" style="white-space: pre;"></code><br>
+
+              <code id="row_18" style="white-space: pre;"></code><br>
+
+              <code id="row_19" style="white-space: pre;"></code><br>
+
+              <code id="row_20" style="white-space: pre;"></code><br>
+
+              <code id="row_21" style="white-space: pre;"></code><br>
+
+              <code id="row_22" style="white-space: pre;"></code><br>
+
+              <code id="row_23" style="white-space: pre;"></code><br>
+
+            </div>
+
+            <div id="detailreference">
+              <ul style="list-style-type: none; padding-left: 0; margin-top: 5px;">
+                <li>References: </li>
+                <li>F fruit</li>
+                <li>K killing fruit</li>
+              </ul>
+            </div>
+
+            <div id="bonesOverlay"></div>
+
+          </div>
+
+        </div>
+
+      </div>
+      <div id="canvasBoardContainer">
+        <canvas id="canvasBoard" width="480" height="480" style="border: 1px solid Gainsboro;"></canvas>
+      </div>
+
+      <div id="rightpanel" style="width: 206px; position: relative;" height="480" >
+
+        <div id="scoreandvelocity" style="background-color: lightgray; padding-left: 12px; padding-top: 1px; margin-bottom: 12px;">
+          <span id="scoreLabel" style="font-family: sans-serif; font-size: 20px;">Data: </span><br>
+          <span id="scoreLabel" style="font-family: sans-serif; font-size: 14px;">score: </span>
+          <span id="score" style="font-family: sans-serif; font-size: 14px;"></span><br>
+          <span id="speedLabel" style="font-family: sans-serif; font-size: 14px;">speed: </span>
+          <span id="speed" style="font-family: sans-serif; font-size: 14px;"></span>
+          <span id="speedRange" style="font-family: sans-serif; font-size: 14px;"> (from 1 to 9)</span>
+          <br><br>
+
+        </div>
+
+
+        <div id="menu" style="background-color: lightgray; padding-left: 12px; padding-top: 0px;">
+          <ul style="list-style-type: none; padding-left: 0; margin-left: 6; font-size: 14px;">
+            <li style="margin-bottom: 4px; font-family: sans-serif; font-size: 20px;">Keys: </li>
+            <li style="margin-bottom: 4px;"><b>&larr; &rarr; &uarr; &darr;</b> to redirect</li>
+            <li style="margin-bottom: 4px;"><b>p</b> for pause</li>
+            <li style="margin-bottom: 4px;"><b>+</b> to increase speed</li>
+            <li style="margin-bottom: 4px;"><b>-</b> to decrease speed</li>
+            <li style="margin-bottom: 4px;"><b>j</b> to jump over the body</li>
+            <li style="margin-bottom: 4px;"><b>r</b> to restart</li>
+            <li style="margin-bottom: 4px;"><b>s</b> to show/hide bare bones</li>
+          </ul>
+        </div>
+
+        <div id="message-wrapper" style="box-sizing: border-box; width: 206px; min-height: 90px; background-color: lightgray; padding-top: 0px;">
+          <div id="message-title" style="display: inline-block; width: 194px; white-space: normal; font-family: sans-serif; font-size: 20px; padding-left: 12px;">Message:</div>
+          <br>
+          <div id="message" style="box-sizing: border-box; width: 50%; margin: 0 auto; white-space: normal; text-align: center; padding-left: 0px;"></div>
+        </div>
+
+        <div id="donationplaceholder" style="text-align: center; margin-top: 18px;">
+          <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script><script type='text/javascript'>kofiwidget2.init('Support me on Ko-fi', '#72a4f2', 'P3S22359A3');kofiwidget2.draw();</script>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div id="footer">
+      <span id="description-text" style="display: block; text-align: center; font-family: sans-serif; font-size: 14px;">
+        The goal is to try refactoring this code to make it clean and neat according to best practices, and to add new features without downtime.
+      </span>
+      <br>
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center; font-family: sans-serif; font-size: 14px;">
+        View Source Code on GitHub
+      </a>
+  </div>
+
+</body>
+
+</html>
