@@ -14,7 +14,7 @@ The first commits are expected to include bad practices and technical debt.
 
 ![Interface Preview](./images/illustrative_image.jpeg)
 
-[Check it running in Github pages](https://github.com)
+[Check it running in Github pages](https://mauro-franzoy.github.io/refactoring-vanilla-javascript-implementation/)
 
 ## Brief description:
 
