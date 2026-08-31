@@ -1,4 +1,4 @@
-# Refactoring Vanilla JavaScript
+# Refactoring Vanilla JavaScript Implementation
 
 > [!NOTE]
 > **Important Notice:**
