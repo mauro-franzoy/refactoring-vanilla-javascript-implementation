@@ -336,11 +336,11 @@ function toggleBareBones() {
   const bonesOverlay = getById("bonesOverlay");
   const barebonestoggle = getById("barebonestoggle");
   if (!GBD.showingBareBones) {
-    barebonestoggle.innerText = "hide";
+    barebonestoggle.innerText = "HIDE";
     bonesOverlay.style.display = 'none';
     bonesOverlay.style.border = '1px solid Gainsboro';
   } else {
-    barebonestoggle.innerText = "see";
+    barebonestoggle.innerText = "SEE";
     bonesOverlay.style.display = 'flex';
     bonesOverlay.style.position = 'absolute';
     bonesOverlay.style.top = '0';
