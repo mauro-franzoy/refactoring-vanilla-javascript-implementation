@@ -3,12 +3,12 @@
 
 <head>
 
-  <link rel="stylesheet" href="style.css?v=1.0.0">
+  <link rel="stylesheet" href="style.css?v=1.0.1">
 
-  <script src="constants.js?v=1.0.0"></script>
-  <script src="state.js?v=1.0.0"></script>
-  <script src="draw.js?v=1.0.0"></script>
-  <script src="logic.js?v=1.0.0"></script>
+  <script src="constants.js?v=1.0.1"></script>
+  <script src="state.js?v=1.0.1"></script>
+  <script src="draw.js?v=1.0.1"></script>
+  <script src="logic.js?v=1.0.1"></script>
 
 </head>
 
@@ -150,16 +150,31 @@
       </div>
     </div>
 
-
-  </div>
-
-  <div id="footer" class="footer-container">
+    <div id="footer" class="footer-container">
       <span id="description-text" class="footer-text">
         The goal is to try refactoring this code to make it clean and neat according to best practices, and to add new features without downtime.
       </span>
       <a href="https://github.com/mauro-franzoy/refactoring-vanilla-javascript-implementation" target="_blank" rel="noopener noreferrer" class="footer-link">
         View Source Code on GitHub
       </a>
+    </div>
+
+    <div id="mobilecontrols" class="mobile-pad show-for-mobile">
+
+      <button id="button-pause" type="button" class="mobile-button">p</button>
+      <button id="button-up" type="button" class="mobile-button">&uarr;</button>
+      <button id="button-jump" type="button" class="mobile-button">j</button>
+
+      <button id="button-left" type="button" class="mobile-button">&larr;</button>
+      <div class="controls-spacer"></div>
+      <button id="button-right" type="button" class="mobile-button">&rarr;</button>
+
+      <div class="controls-spacer"></div>
+      <button id="button-down" type="button" class="mobile-button">&darr;</button>
+      <div class="controls-spacer"></div>
+
+    </div>
+
   </div>
 
 </body>

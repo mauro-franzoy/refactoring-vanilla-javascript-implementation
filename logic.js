@@ -535,6 +535,45 @@ function moveTailAhead() {
   LPD.playerTailIndex = LPD.playerTailIndex + 1;
 }
 
+function processTap(event) {
+  event.preventDefault();
+  
+  const button = event.target.closest('.mobile-button');
+  if (!button) return;
+
+  const buttonId = button.id;
+
+  if (buttonId === 'button-pause') {
+
+    RD.pressedKey = KeyboardKey.P;
+
+  } else if (buttonId === 'button-up') {
+
+    RD.pressedKey = KeyboardKey.UP;
+    
+  } else if (buttonId === 'button-jump') {
+
+    RD.pressedKey = KeyboardKey.J;
+    
+  } else if (buttonId === 'button-left') {
+  
+    RD.pressedKey = KeyboardKey.LEFT;
+    
+  } else if (buttonId === 'button-right') {
+
+    RD.pressedKey = KeyboardKey.RIGHT;
+    
+  } else if (buttonId === 'button-down') {
+
+    RD.pressedKey = KeyboardKey.DOWN;
+    
+  }
+}
+
 document.addEventListener('keydown', processKeydown);
 window.addEventListener('load', play);
 
+document.addEventListener('DOMContentLoaded', function() {
+  const mobilecontrols = getById('mobilecontrols');
+  mobilecontrols.addEventListener('touchstart', processTap);
+});
