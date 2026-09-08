@@ -216,7 +216,7 @@ body {
 .mobile-button {
   width: 100%;
   height: 100%;
-  background-color: CornflowerBlue;
+  background-color: LightSteelBlue;
   color: #000000;
   border: none;
   border-radius: 32px;
@@ -228,9 +228,9 @@ body {
   touch-action: manipulation;
 }
 
-.controls-spacer {
-  visibility: hidden;
-  pointer-events: none;
+.mobile-button-arrow {
+  border: 8px solid cornflowerblue;
+  box-sizing: border-box;
 }
 
 .show-for-mobile {

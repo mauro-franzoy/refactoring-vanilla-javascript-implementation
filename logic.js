@@ -567,7 +567,21 @@ function processTap(event) {
 
     RD.pressedKey = KeyboardKey.DOWN;
     
+  } else if (buttonId === 'button-restart') {
+
+    RD.pressedKey = KeyboardKey.R;
+    restart();
+    
+  } else if (buttonId === 'button-minus') {
+
+    RD.pressedKey = KeyboardKey.MINUS;
+    
+  } else if (buttonId === 'button-plus') {
+
+    RD.pressedKey = KeyboardKey.PLUS;
+    
   }
+  
 }
 
 document.addEventListener('keydown', processKeydown);
