@@ -3,12 +3,16 @@
 
 <head>
 
+  <meta charset="UTF-8">
+  
+  <title>A vanilla JavaScript implementation</title>
+
   <link rel="stylesheet" href="style.css?v=1.0.2">
 
-  <script src="constants.js?v=1.0.2"></script>
-  <script src="state.js?v=1.0.2"></script>
-  <script src="draw.js?v=1.0.2"></script>
-  <script src="logic.js?v=1.0.2"></script>
+  <script src="constants.js?v=1.0.2" defer></script>
+  <script src="state.js?v=1.0.2" defer></script>
+  <script src="draw.js?v=1.0.2" defer></script>
+  <script src="logic.js?v=1.0.2" defer></script>
 
 </head>
 
@@ -20,73 +24,73 @@
       <span class="header-title">A vanilla JavaScript implementation</span>
     </header>
 
-    <div id="mainBoardContainer" class="board-container">
-      <div id="leftpanel" class="left-panel">
+    <div id="main-board-container" class="board-container">
+      <div id="left-panel" class="left-panel">
         
 
-        <div id="hiddendetailscontainer">
+        <div id="hidden-details-container">
           <div class="title-toggle-row">
-            <span id="barebonestitle" class="sub-title">The bare bones: </span>
-            <div id="barebonestoggle" class="toggle-btn" onclick="toggleBareBones()">
+            <span id="bare-bones-title" class="sub-title">The bare bones: </span>
+            <div id="bare-bones-toggle" class="toggle-btn">
               SEE
             </div>
           </div>
           
-          <div id="ovarlayBonesContainer" class="overlay-container">
+          <div id="overlay-bones-container" class="overlay-container">
           
-            <div id="characterBoard" class="character-board">
+            <div id="character-board" class="character-board">
 
-              <code id="row_0" class="board-row"></code>
+              <code id="row-0" class="board-row"></code>
 
-              <code id="row_1" class="board-row"></code>
+              <code id="row-1" class="board-row"></code>
 
-              <code id="row_2" class="board-row"></code>
+              <code id="row-2" class="board-row"></code>
 
-              <code id="row_3" class="board-row"></code>
+              <code id="row-3" class="board-row"></code>
 
-              <code id="row_4" class="board-row"></code>
+              <code id="row-4" class="board-row"></code>
 
-              <code id="row_5" class="board-row"></code>
+              <code id="row-5" class="board-row"></code>
 
-              <code id="row_6" class="board-row"></code>
+              <code id="row-6" class="board-row"></code>
 
-              <code id="row_7" class="board-row"></code>
+              <code id="row-7" class="board-row"></code>
 
-              <code id="row_8" class="board-row"></code>
+              <code id="row-8" class="board-row"></code>
 
-              <code id="row_9" class="board-row"></code>
+              <code id="row-9" class="board-row"></code>
 
-              <code id="row_10" class="board-row"></code>
+              <code id="row-10" class="board-row"></code>
 
-              <code id="row_11" class="board-row"></code>
+              <code id="row-11" class="board-row"></code>
 
-              <code id="row_12" class="board-row"></code>
+              <code id="row-12" class="board-row"></code>
 
-              <code id="row_13" class="board-row"></code>
+              <code id="row-13" class="board-row"></code>
 
-              <code id="row_14" class="board-row"></code>
+              <code id="row-14" class="board-row"></code>
 
-              <code id="row_15" class="board-row"></code>
+              <code id="row-15" class="board-row"></code>
 
-              <code id="row_16" class="board-row"></code>
+              <code id="row-16" class="board-row"></code>
 
-              <code id="row_17" class="board-row"></code>
+              <code id="row-17" class="board-row"></code>
 
-              <code id="row_18" class="board-row"></code>
+              <code id="row-18" class="board-row"></code>
 
-              <code id="row_19" class="board-row"></code>
+              <code id="row-19" class="board-row"></code>
 
-              <code id="row_20" class="board-row"></code>
+              <code id="row-20" class="board-row"></code>
 
-              <code id="row_21" class="board-row"></code>
+              <code id="row-21" class="board-row"></code>
 
-              <code id="row_22" class="board-row"></code>
+              <code id="row-22" class="board-row"></code>
 
-              <code id="row_23" class="board-row"></code>
+              <code id="row-23" class="board-row"></code>
 
             </div>
 
-            <div id="detailreference">
+            <div id="detail-reference">
               <ul class="reference-list">
                 <li>References: </li>
                 <li>F fruit</li>
@@ -94,20 +98,20 @@
               </ul>
             </div>
 
-            <div id="bonesOverlay"></div>
+            <div id="bones-overlay"></div>
 
           </div>
 
         </div>
 
       </div>
-      <div id="canvasBoardContainer">
-        <canvas id="canvasBoard" class="game-canvas" width="480" height="480"></canvas>
+      <div id="canvas-board-container">
+        <canvas id="canvas-board" class="game-canvas" width="480" height="480"></canvas>
       </div>
 
-      <div id="rightpanel" class="right-panel">
+      <div id="right-panel" class="right-panel">
 
-        <div id="scoreandvelocity" class="score-panel">
+        <div id="score-and-velocity" class="score-panel">
 
           <span class="panel-heading">Data: </span>
           
@@ -142,7 +146,7 @@
           <div id="message" class="message-body"></div>
         </div>
 
-        <div id="donationplaceholder" class="support-container">
+        <div id="donation-placeholder" class="support-container">
           <script type='text/javascript' src='https://storage.ko-fi.com/cdn/widget/Widget_2.js'></script>
           <script type='text/javascript'>kofiwidget2.init('Support me on Ko-fi', '#72a4f2', 'P3S22359A3');kofiwidget2.draw();</script>
         </div>
@@ -159,7 +163,7 @@
       </a>
     </div>
 
-    <div id="mobilecontrols" class="mobile-pad show-for-mobile">
+    <div id="mobile-controls" class="mobile-pad show-for-mobile">
 
       <button id="button-restart" type="button" class="mobile-button">r</button>
       <button id="button-up" type="button" class="mobile-button mobile-button-arrow">&uarr;</button>

@@ -63,7 +63,7 @@ function placeCellContent(location, block) {
   let rowNumber = location[0];
   let colNumber = location[1];
 
-  let rowName = "row_" + rowNumber;
+  let rowName = "row-" + rowNumber;
   let actualRow = document.getElementById(rowName);
   let text = actualRow.textContent;
 
@@ -76,7 +76,7 @@ function getCellContent(location) {
   let row = location[0];
   let col = location[1];
 
-  let rowName = "row_" + row;
+  let rowName = "row-" + row;
   let text = document.getElementById(rowName).textContent;
 
   let block = text.substring(col, col + 1);

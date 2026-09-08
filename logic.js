@@ -6,7 +6,7 @@ function setLocalizationData(index, position, direction) {
 
 function doSomeInitialization() {
 
-  let canvasBoard = getById("canvasBoard");
+  let canvasBoard = getById("canvas-board");
   cbCtx = canvasBoard.getContext("2d");
 
   setLocalizationData(0, [11, 1], Direction.UP);
@@ -33,31 +33,31 @@ function doSomeInitialization() {
   getById("score").textContent = "0";
   getById("speed").textContent = GBD.choosenSpeed;
 
-  getById("row_0").textContent = "WWWWWWWWWWWWWWWWWWWWWWWW";
-  getById("row_1").textContent = "W                      W";
-  getById("row_2").textContent = "W                      W";
-  getById("row_3").textContent = "WBBH                   W";
-  getById("row_4").textContent = "WB                     W";
-  getById("row_5").textContent = "WB                     W";
-  getById("row_6").textContent = "WB                     W";
-  getById("row_7").textContent = "WB                     W";
-  getById("row_8").textContent = "WB                  F  W";
-  getById("row_9").textContent = "WB                     W";
-  getById("row_10").textContent = "WB                     W";
-  getById("row_11").textContent = "WB                     W";
-  getById("row_11").textContent = "WB                     W";
-  getById("row_12").textContent = "W                      W";
-  getById("row_13").textContent = "W                      W";
-  getById("row_14").textContent = "W                      W";
-  getById("row_15").textContent = "W                      W";
-  getById("row_16").textContent = "W                      W";
-  getById("row_17").textContent = "W                      W";
-  getById("row_18").textContent = "W                      W";
-  getById("row_19").textContent = "W                      W";
-  getById("row_20").textContent = "W                      W";
-  getById("row_21").textContent = "W                      W";
-  getById("row_22").textContent = "W                      W";
-  getById("row_23").textContent = "WWWWWWWWWWWWWWWWWWWWWWWW";
+  getById("row-0").textContent = "WWWWWWWWWWWWWWWWWWWWWWWW";
+  getById("row-1").textContent = "W                      W";
+  getById("row-2").textContent = "W                      W";
+  getById("row-3").textContent = "WBBH                   W";
+  getById("row-4").textContent = "WB                     W";
+  getById("row-5").textContent = "WB                     W";
+  getById("row-6").textContent = "WB                     W";
+  getById("row-7").textContent = "WB                     W";
+  getById("row-8").textContent = "WB                  F  W";
+  getById("row-9").textContent = "WB                     W";
+  getById("row-10").textContent = "WB                     W";
+  getById("row-11").textContent = "WB                     W";
+  getById("row-11").textContent = "WB                     W";
+  getById("row-12").textContent = "W                      W";
+  getById("row-13").textContent = "W                      W";
+  getById("row-14").textContent = "W                      W";
+  getById("row-15").textContent = "W                      W";
+  getById("row-16").textContent = "W                      W";
+  getById("row-17").textContent = "W                      W";
+  getById("row-18").textContent = "W                      W";
+  getById("row-19").textContent = "W                      W";
+  getById("row-20").textContent = "W                      W";
+  getById("row-21").textContent = "W                      W";
+  getById("row-22").textContent = "W                      W";
+  getById("row-23").textContent = "WWWWWWWWWWWWWWWWWWWWWWWW";
 
   translateCharBoardToCanvas();
 
@@ -333,8 +333,8 @@ function restart() {
 }
 
 function toggleBareBones() {
-  const bonesOverlay = getById("bonesOverlay");
-  const barebonestoggle = getById("barebonestoggle");
+  const bonesOverlay = getById("bones-overlay");
+  const barebonestoggle = getById("bare-bones-toggle");
   if (!GBD.showingBareBones) {
     barebonestoggle.innerText = "HIDE";
     bonesOverlay.style.display = 'none';
@@ -588,6 +588,11 @@ document.addEventListener('keydown', processKeydown);
 window.addEventListener('load', play);
 
 document.addEventListener('DOMContentLoaded', function() {
-  const mobilecontrols = getById('mobilecontrols');
+
+  const mobilecontrols = getById('mobile-controls');
   mobilecontrols.addEventListener('touchstart', processTap);
+
+  const bareBonesToggle = getById('bare-bones-toggle');
+  bareBonesToggle.addEventListener('click', toggleBareBones);
+
 });
