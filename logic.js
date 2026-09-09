@@ -1,37 +1,40 @@
+"use strict";
+
+import * as Draw from './draw.js';
+import * as State from './state.js';
+import * as Constants from './constants.js';
+
 function setLocalizationData(index, position, direction) {
-  LPD.setLocationAtIndex(index, position);
+  State.LPD.setLocationAtIndex(index, position);
   let keyForExtraLocationData = locationToKey(position);
-  GBD.extraLocationData.set(keyForExtraLocationData, direction);
+  State.GBD.extraLocationData.set(keyForExtraLocationData, direction);
 }
 
 function doSomeInitialization() {
 
-  let canvasBoard = getById("canvas-board");
-  cbCtx = canvasBoard.getContext("2d");
+  setLocalizationData(0, [11, 1], Constants.Direction.UP);
+  setLocalizationData(1, [10, 1], Constants.Direction.UP);
+  setLocalizationData(2, [9, 1], Constants.Direction.UP);
+  setLocalizationData(3, [8, 1], Constants.Direction.UP);
+  setLocalizationData(4, [7, 1], Constants.Direction.UP);
+  setLocalizationData(5, [6, 1], Constants.Direction.UP);
+  setLocalizationData(6, [5, 1], Constants.Direction.UP);
+  setLocalizationData(7, [4, 1], Constants.Direction.UP);
 
-  setLocalizationData(0, [11, 1], Direction.UP);
-  setLocalizationData(1, [10, 1], Direction.UP);
-  setLocalizationData(2, [9, 1], Direction.UP);
-  setLocalizationData(3, [8, 1], Direction.UP);
-  setLocalizationData(4, [7, 1], Direction.UP);
-  setLocalizationData(5, [6, 1], Direction.UP);
-  setLocalizationData(6, [5, 1], Direction.UP);
-  setLocalizationData(7, [4, 1], Direction.UP);
+  setLocalizationData(8, [3, 1], Constants.Direction.RIGHT);
+  setLocalizationData(9, [3, 2], Constants.Direction.RIGHT);
+  setLocalizationData(10, [3, 3], Constants.Direction.RIGHT);
 
-  setLocalizationData(8, [3, 1], Direction.RIGHT);
-  setLocalizationData(9, [3, 2], Direction.RIGHT);
-  setLocalizationData(10, [3, 3], Direction.RIGHT);
+  State.LPD.playerHeadIndex = 10;
+  State.LPD.playerTailIndex = 0;
 
-  LPD.playerHeadIndex = 10;
-  LPD.playerTailIndex = 0;
-
-  LPD.headPositionCurrent = [3, 3];
-  LPD.headPositionNext = [3, 4];
+  State.LPD.headPositionCurrent = [3, 3];
+  State.LPD.headPositionNext = [3, 4];
 
   // drawing the initial board and stuff
 
   getById("score").textContent = "0";
-  getById("speed").textContent = GBD.choosenSpeed;
+  getById("speed").textContent = State.GBD.choosenSpeed;
 
   getById("row-0").textContent = "WWWWWWWWWWWWWWWWWWWWWWWW";
   getById("row-1").textContent = "W                      W";
@@ -70,8 +73,8 @@ function translateCharBoardToCanvas() {
   for (let i = 0; i <= 23; i++) {
     for (let j = 0; j <= 23; j++) {
       position = [i, j];
-      cellContent = getCellContent(position);
-      drawSquare(position, cellContent);
+      cellContent = State.getCellContent(position);
+      Draw.drawSquare(position, cellContent);
     }
   }
 }
@@ -83,27 +86,27 @@ function getRandomNumber() {
 }
 
 function placeFruit() {
-  if (GBD.fruitCount < 3) {
+  if (State.GBD.fruitCount < 3) {
     let row = getRandomNumber();
     let col = getRandomNumber();
     let fruitPosition = [row, col];
-    let cellContent = getCellContent(fruitPosition);
-    if (cellContent === CellContent.SPACE) {
-      GBD.fruitCount = GBD.fruitCount + 1;
-      placeCellContent(fruitPosition, CellContent.FRUIT);
+    let cellContent = State.getCellContent(fruitPosition);
+    if (cellContent === Constants.CellContent.SPACE) {
+      State.GBD.fruitCount = State.GBD.fruitCount + 1;
+      State.placeCellContent(fruitPosition, Constants.CellContent.FRUIT);
     }
   }
 }
 
 function placeKillingFruit() {
-  if (GBD.killingFruitCount < 3) {
+  if (State.GBD.killingFruitCount < 3) {
     let row = getRandomNumber();
     let col = getRandomNumber();
     let killingPosition = [row, col];
-    let cellContent = getCellContent(killingPosition);
-    if (cellContent === CellContent.SPACE && !nearHeadZone(killingPosition)) {
-      GBD.killingFruitCount = GBD.killingFruitCount + 1;
-      placeCellContent(killingPosition, CellContent.KILLING_FRUIT);
+    let cellContent = State.getCellContent(killingPosition);
+    if (cellContent === Constants.CellContent.SPACE && !nearHeadZone(killingPosition)) {
+      State.GBD.killingFruitCount = State.GBD.killingFruitCount + 1;
+      State.placeCellContent(killingPosition, Constants.CellContent.KILLING_FRUIT);
       kfsList[kfsPointer] = killingPosition;
       increseKFP();
     }
@@ -112,8 +115,8 @@ function placeKillingFruit() {
 
 function nearHeadZone(killingPosition) {
 
-  let headDirection = LPD.headDirection;
-  let headPosition = LPD.headPositionCurrent;
+  let headDirection = State.LPD.headDirection;
+  let headPosition = State.LPD.headPositionCurrent;
 
   let x = headPosition[0];
   let y = headPosition[1];
@@ -121,7 +124,7 @@ function nearHeadZone(killingPosition) {
   let kx = killingPosition[0];
   let ky = killingPosition[1];
 
-  if (headDirection === Direction.RIGHT) {
+  if (headDirection === Constants.Direction.RIGHT) {
 
     return (x === kx && y + 1 === ky) ||
       (x + 1 === kx && y + 1 === ky) ||
@@ -132,11 +135,11 @@ function nearHeadZone(killingPosition) {
       (x === kx && y - 1 === ky) ||
       (x + 1 === kx && y - 1 === ky)
 
-  } else if (headDirection === Direction.LEFT) {
+  } else if (headDirection === Constants.Direction.LEFT) {
 
-  } else if (headDirection === Direction.UP) {
+  } else if (headDirection === Constants.Direction.UP) {
 
-  } else if (headDirection === Direction.DOWN) {
+  } else if (headDirection === Constants.Direction.DOWN) {
 
   }
 
@@ -150,42 +153,42 @@ function increseKFP() {
 }
 
 function getCellContentNextPositionHead() {
-  let contentOfNextPositionHead = getCellContent(LPD.headPositionNext);
+  let contentOfNextPositionHead = State.getCellContent(State.LPD.headPositionNext);
   return contentOfNextPositionHead;
 }
 
 function calculateHeadDirection() {
 
-  if (RD.pressedKey === KeyboardKey.RIGHT) {
+  if (State.RD.pressedKey === Constants.KeyboardKey.RIGHT) {
 
-    if (LPD.headDirection === Direction.DOWN || LPD.headDirection === Direction.UP) {
+    if (State.LPD.headDirection === Constants.Direction.DOWN || State.LPD.headDirection === Constants.Direction.UP) {
 
-      LPD.headDirection = Direction.RIGHT;
-      RD.pressedKey = KeyboardKey.NO_KEY;
+      State.LPD.headDirection = Constants.Direction.RIGHT;
+      State.RD.pressedKey = Constants.KeyboardKey.NO_KEY;
     }
 
-  } else if (RD.pressedKey === KeyboardKey.LEFT) {
+  } else if (State.RD.pressedKey === Constants.KeyboardKey.LEFT) {
 
-    if (LPD.headDirection === Direction.DOWN || LPD.headDirection === Direction.UP) {
+    if (State.LPD.headDirection === Constants.Direction.DOWN || State.LPD.headDirection === Constants.Direction.UP) {
 
-      LPD.headDirection = Direction.LEFT;
-      RD.pressedKey = KeyboardKey.NO_KEY;
+      State.LPD.headDirection = Constants.Direction.LEFT;
+      State.RD.pressedKey = Constants.KeyboardKey.NO_KEY;
     }
 
-  } else if (RD.pressedKey === KeyboardKey.DOWN) {
+  } else if (State.RD.pressedKey === Constants.KeyboardKey.DOWN) {
 
-    if (LPD.headDirection === Direction.RIGHT || LPD.headDirection === Direction.LEFT) {
+    if (State.LPD.headDirection === Constants.Direction.RIGHT || State.LPD.headDirection === Constants.Direction.LEFT) {
 
-      LPD.headDirection = Direction.DOWN;
-      RD.pressedKey = KeyboardKey.NO_KEY;
+      State.LPD.headDirection = Constants.Direction.DOWN;
+      State.RD.pressedKey = Constants.KeyboardKey.NO_KEY;
     }
 
-  } else if (RD.pressedKey === KeyboardKey.UP) {
+  } else if (State.RD.pressedKey === Constants.KeyboardKey.UP) {
 
-    if (LPD.headDirection === Direction.RIGHT || LPD.headDirection === Direction.LEFT) {
+    if (State.LPD.headDirection === Constants.Direction.RIGHT || State.LPD.headDirection === Constants.Direction.LEFT) {
 
-      LPD.headDirection = Direction.UP;
-      RD.pressedKey = KeyboardKey.NO_KEY;
+      State.LPD.headDirection = Constants.Direction.UP;
+      State.RD.pressedKey = Constants.KeyboardKey.NO_KEY;
     }
 
   }
@@ -194,20 +197,20 @@ function calculateHeadDirection() {
 
 function calculateHeadNextPos() {
 
-  if (LPD.headDirection === Direction.RIGHT) {
-    LPD.headPositionNext = [LPD.headPositionCurrent[0], LPD.headPositionCurrent[1] + 1];
+  if (State.LPD.headDirection === Constants.Direction.RIGHT) {
+    State.LPD.headPositionNext = [State.LPD.headPositionCurrent[0], State.LPD.headPositionCurrent[1] + 1];
   }
 
-  if (LPD.headDirection === Direction.LEFT) {
-    LPD.headPositionNext = [LPD.headPositionCurrent[0], LPD.headPositionCurrent[1] - 1];
+  if (State.LPD.headDirection === Constants.Direction.LEFT) {
+    State.LPD.headPositionNext = [State.LPD.headPositionCurrent[0], State.LPD.headPositionCurrent[1] - 1];
   }
 
-  if (LPD.headDirection === Direction.UP) {
-    LPD.headPositionNext = [LPD.headPositionCurrent[0] - 1, LPD.headPositionCurrent[1]];
+  if (State.LPD.headDirection === Constants.Direction.UP) {
+    State.LPD.headPositionNext = [State.LPD.headPositionCurrent[0] - 1, State.LPD.headPositionCurrent[1]];
   }
 
-  if (LPD.headDirection === Direction.DOWN) {
-    LPD.headPositionNext = [LPD.headPositionCurrent[0] + 1, LPD.headPositionCurrent[1]];
+  if (State.LPD.headDirection === Constants.Direction.DOWN) {
+    State.LPD.headPositionNext = [State.LPD.headPositionCurrent[0] + 1, State.LPD.headPositionCurrent[1]];
   }
 
 }
@@ -215,116 +218,116 @@ function calculateHeadNextPos() {
 
 function processKeydown(event) {
 
-  if (event.key === KeyboardKey.LEFT) {
+  if (event.key === Constants.KeyboardKey.LEFT) {
     event.preventDefault();
     event.stopPropagation();
-    RD.pressedKey = KeyboardKey.LEFT;
+    State.RD.pressedKey = Constants.KeyboardKey.LEFT;
 
-  } else if (event.key === KeyboardKey.RIGHT) {
+  } else if (event.key === Constants.KeyboardKey.RIGHT) {
     event.preventDefault();
     event.stopPropagation();
-    RD.pressedKey = KeyboardKey.RIGHT;
+    State.RD.pressedKey = Constants.KeyboardKey.RIGHT;
 
-  } else if (event.key === KeyboardKey.UP) {
+  } else if (event.key === Constants.KeyboardKey.UP) {
     event.preventDefault();
     event.stopPropagation();
-    RD.pressedKey = KeyboardKey.UP;
+    State.RD.pressedKey = Constants.KeyboardKey.UP;
 
-  } else if (event.key === KeyboardKey.DOWN) {
+  } else if (event.key === Constants.KeyboardKey.DOWN) {
     event.preventDefault();
     event.stopPropagation();
-    RD.pressedKey = KeyboardKey.DOWN;
+    State.RD.pressedKey = Constants.KeyboardKey.DOWN;
 
-  } else if (event.key === KeyboardKey.SPACE) {
+  } else if (event.key === Constants.KeyboardKey.SPACE) {
     event.preventDefault();
     event.stopPropagation();
-    RD.pressedKey = KeyboardKey.SPACE;
+    State.RD.pressedKey = Constants.KeyboardKey.SPACE;
 
   } else if (event.key === 'p' || event.key === 'P') {
     event.preventDefault();
     event.stopPropagation();
-    RD.pressedKey = KeyboardKey.P;
+    State.RD.pressedKey = Constants.KeyboardKey.P;
 
   } else if (event.key === 's' || event.key === 'S') {
     event.preventDefault();
     event.stopPropagation();
-    RD.pressedKey = KeyboardKey.S;
+    State.RD.pressedKey = Constants.KeyboardKey.S;
     toggleBareBones();
 
   } else if (event.key === '+') {
     event.preventDefault();
     event.stopPropagation();
-    RD.pressedKey = KeyboardKey.PLUS;
+    State.RD.pressedKey = Constants.KeyboardKey.PLUS;
 
   } else if (event.key === '-') {
     event.preventDefault();
     event.stopPropagation();
-    RD.pressedKey = KeyboardKey.MINUS;
+    State.RD.pressedKey = Constants.KeyboardKey.MINUS;
 
   } else if (event.key === 'j' || event.key === 'J') {
     event.preventDefault();
     event.stopPropagation();
-    RD.pressedKey = KeyboardKey.J;
+    State.RD.pressedKey = Constants.KeyboardKey.J;
 
   } else if (event.key === 'r' || event.key === 'R') {
     event.preventDefault();
     event.stopPropagation();
-    RD.pressedKey = KeyboardKey.R;
+    State.RD.pressedKey = Constants.KeyboardKey.R;
     restart();
   }
 
 }
 
-function aDelay(millis) {
+export function aDelay(millis) {
   return new Promise((resolve) => {
     setTimeout(resolve, millis);
   });
 }
 
 function setSpeed() {
-  GBD.choosenSpeed = "6";
-  let intSpeed = parseInt(GBD.choosenSpeed);
+  State.GBD.choosenSpeed = "6";
+  let intSpeed = parseInt(State.GBD.choosenSpeed);
   intSpeed = 10 - intSpeed;
-  RD.delayInterval = 100 * intSpeed;
+  State.RD.delayInterval = 100 * intSpeed;
   showSpeed();
 }
 
 function increaseSpeed() {
-  let intSpeed = parseInt(GBD.choosenSpeed);
+  let intSpeed = parseInt(State.GBD.choosenSpeed);
   if (intSpeed < 9) {
     intSpeed = intSpeed + 1;
-    GBD.choosenSpeed = String(intSpeed);
+    State.GBD.choosenSpeed = String(intSpeed);
     intSpeed = 10 - intSpeed;
-    RD.delayInterval = 100 * intSpeed;
+    State.RD.delayInterval = 100 * intSpeed;
     showSpeed();
   }
 }
 
 function decreaseSpeed() {
-  let intSpeed = parseInt(GBD.choosenSpeed);
+  let intSpeed = parseInt(State.GBD.choosenSpeed);
   if (intSpeed > 1) {
     intSpeed = intSpeed - 1;
-    GBD.choosenSpeed = String(intSpeed);
+    State.GBD.choosenSpeed = String(intSpeed);
     intSpeed = 10 - intSpeed;
-    RD.delayInterval = 100 * intSpeed;
+    State.RD.delayInterval = 100 * intSpeed;
     showSpeed();
   }
 }
 
 function showSpeed() {
-  getById("speed").textContent = "" + GBD.choosenSpeed;
+  getById("speed").textContent = "" + State.GBD.choosenSpeed;
 }
 
-async function play() {
+export async function play() {
   setSpeed();
   doSomeInitialization();
-  drawPlayer();
-  while (!RD.gameOver) {
+  Draw.drawPlayer();
+  while (!State.RD.gameOver) {
     checkForSpecialKeys();
-    if (!RD.paused) {
+    if (!State.RD.paused) {
       gameCycle();
     }
-    await aDelay(RD.delayInterval);
+    await aDelay(State.RD.delayInterval);
   }
 }
 
@@ -335,7 +338,7 @@ function restart() {
 function toggleBareBones() {
   const bonesOverlay = getById("bones-overlay");
   const barebonestoggle = getById("bare-bones-toggle");
-  if (!GBD.showingBareBones) {
+  if (!State.GBD.showingBareBones) {
     barebonestoggle.innerText = "HIDE";
     bonesOverlay.style.display = 'none';
     bonesOverlay.style.border = '1px solid Gainsboro';
@@ -353,27 +356,27 @@ function toggleBareBones() {
     bonesOverlay.style.alignItems = 'center';
     bonesOverlay.style.border = '2px dashed gray';
   }
-  GBD.showingBareBones = !GBD.showingBareBones;
+  State.GBD.showingBareBones = !State.GBD.showingBareBones;
 }
 
 function checkForSpecialKeys() {
-  if (RD.pressedKey === KeyboardKey.P) {
-    RD.paused = !RD.paused;
-    RD.pressedKey = KeyboardKey.NO_KEY;
-  } else if (RD.pressedKey === KeyboardKey.S) {
+  if (State.RD.pressedKey === Constants.KeyboardKey.P) {
+    State.RD.paused = !State.RD.paused;
+    State.RD.pressedKey = Constants.KeyboardKey.NO_KEY;
+  } else if (State.RD.pressedKey === Constants.KeyboardKey.S) {
     setSpeed();
-    RD.pressedKey = KeyboardKey.NO_KEY;
-  } else if (RD.pressedKey === KeyboardKey.PLUS) {
+    State.RD.pressedKey = Constants.KeyboardKey.NO_KEY;
+  } else if (State.RD.pressedKey === Constants.KeyboardKey.PLUS) {
     increaseSpeed();
-    RD.pressedKey = KeyboardKey.NO_KEY;
-  } else if (RD.pressedKey === KeyboardKey.MINUS) {
+    State.RD.pressedKey = Constants.KeyboardKey.NO_KEY;
+  } else if (State.RD.pressedKey === Constants.KeyboardKey.MINUS) {
     decreaseSpeed();
-    RD.pressedKey = KeyboardKey.NO_KEY;
+    State.RD.pressedKey = Constants.KeyboardKey.NO_KEY;
   }
 }
 
 function markTheJump() {
-  placeCellContent(LPD.headPositionNext, CellContent.JUMP);
+  State.placeCellContent(State.LPD.headPositionNext, Constants.CellContent.JUMP);
 }
 
 function gameCycle() {
@@ -382,41 +385,41 @@ function gameCycle() {
   calculateHeadDirection();
   calculateHeadNextPos();
   let nextCellContent = getCellContentNextPositionHead()
-  if ((nextCellContent === CellContent.SPACE) ||
-    (nextCellContent === CellContent.BODY && isNextPositionSameAsTailPosition())) {
+  if ((nextCellContent === Constants.CellContent.SPACE) ||
+    (nextCellContent === Constants.CellContent.BODY && isNextPositionSameAsTailPosition())) {
     movePlayerAhead();
-  } else if (nextCellContent === CellContent.FRUIT) {
+  } else if (nextCellContent === Constants.CellContent.FRUIT) {
     growPlayerAhead();
-  } else if (nextCellContent === CellContent.BODY) {
-    if ((RD.pressedKey === KeyboardKey.J)) {
-      RD.pressedKey = KeyboardKey.NO_KEY;
+  } else if (nextCellContent === Constants.CellContent.BODY) {
+    if ((State.RD.pressedKey === Constants.KeyboardKey.J)) {
+      State.RD.pressedKey = Constants.KeyboardKey.NO_KEY;
       markTheJump();
       movePlayerAhead();
       // nothing
     } else {
       movePlayerAhead();
-      drawPlayerDeathSync(1, Color.JUMP_MARK);
+      Draw.drawPlayerDeathSync(1, Constants.Color.JUMP_MARK);
       doGameOver("you stomp on yourself!!!");
     }
-  } else if (nextCellContent === CellContent.WALL) {
-    clearHeadSourroundings();
-    drawPlayerDeathSync(1, Color.WALL);
+  } else if (nextCellContent === Constants.CellContent.WALL) {
+    Draw.clearHeadSourroundings();
+    Draw.drawPlayerDeathSync(1, Constants.Color.WALL);
     doGameOver("you hit a wall!!!");
-  } else if (nextCellContent === CellContent.KILLING_FRUIT) {
+  } else if (nextCellContent === Constants.CellContent.KILLING_FRUIT) {
     growToDeath();
 
   }
 }
 
 function isNextPositionSameAsTailPosition() {
-  let tailLocation = LPD.getLocationAtIndex(LPD.playerTailIndex);
-  return ((tailLocation[0] === LPD.headPositionNext[0]) &&
-    (tailLocation[1] === LPD.headPositionNext[1]));
+  let tailLocation = State.LPD.getLocationAtIndex(State.LPD.playerTailIndex);
+  return ((tailLocation[0] === State.LPD.headPositionNext[0]) &&
+    (tailLocation[1] === State.LPD.headPositionNext[1]));
 }
 
 async function doGameOver(mje) {
-  RD.gameOver = true;
-  await aDelay(RD.deathDelay * (LPD.playerHeadIndex - LPD.playerTailIndex + 5));
+  State.RD.gameOver = true;
+  await aDelay(State.RD.deathDelay * (State.LPD.playerHeadIndex - State.LPD.playerTailIndex + 5));
 
   const messagewrapper = getById("message-wrapper");
   messagewrapper.style.border = '3px solid red';
@@ -447,16 +450,16 @@ function movePlayerAhead() {
 }
 
 function growPlayerAhead() {
-  GBD.fruitCount = GBD.fruitCount - 1;
+  State.GBD.fruitCount = State.GBD.fruitCount - 1;
   moveKillingFruit();
   moveHeadAhead();
   incrementScore();
 }
 
 function growToDeath() {
-  GBD.fruitCount = GBD.fruitCount - 1;
+  State.GBD.fruitCount = State.GBD.fruitCount - 1;
   moveHeadAhead();
-  drawPlayerDeathSync(1, Color.KILLING_FRUIT);
+  Draw.drawPlayerDeathSync(1, Constants.Color.KILLING_FRUIT);
   doGameOver("you eat a killing fruit!!!");
 }
 
@@ -466,73 +469,73 @@ let kfsPointer = 0;
 function moveKillingFruit() {
   let killingLocation = kfsList[kfsPointer];
   if (killingLocation !== undefined) {
-    let kfLocationContent = getCellContent(killingLocation);
-    if (kfLocationContent === CellContent.KILLING_FRUIT) {
-      placeCellContent(killingLocation, CellContent.SPACE);
+    let kfLocationContent = State.getCellContent(killingLocation);
+    if (kfLocationContent === Constants.CellContent.KILLING_FRUIT) {
+      State.placeCellContent(killingLocation, Constants.CellContent.SPACE);
       increseKFP();
-      GBD.killingFruitCount = GBD.killingFruitCount - 1;
+      State.GBD.killingFruitCount = State.GBD.killingFruitCount - 1;
     }
   }
 
 }
 
 function incrementScore() {
-  GBD.score = GBD.score + 1;
-  getById("score").textContent = "" + GBD.score;
+  State.GBD.score = State.GBD.score + 1;
+  getById("score").textContent = "" + State.GBD.score;
 }
 
-function getById(id) {
+export function getById(id) {
   return document.getElementById(id);
 }
 
 function moveHeadAhead() {
 
-  let currentPosContent = getCellContent(LPD.headPositionCurrent);
-  if (currentPosContent === CellContent.JUMP) {
+  let currentPosContent = State.getCellContent(State.LPD.headPositionCurrent);
+  if (currentPosContent === Constants.CellContent.JUMP) {
     // nothing
   } else {
-    placeCellContent(LPD.headPositionCurrent, CellContent.BODY);
+    State.placeCellContent(State.LPD.headPositionCurrent, Constants.CellContent.BODY);
   }
 
-  let keyForBody = locationToKey(LPD.headPositionCurrent);
-  GBD.extraLocationData.set(keyForBody, LPD.headDirection);
+  let keyForBody = locationToKey(State.LPD.headPositionCurrent);
+  State.GBD.extraLocationData.set(keyForBody, State.LPD.headDirection);
 
-  let nextPosContent = getCellContent(LPD.headPositionNext);
-  if (nextPosContent === CellContent.JUMP) {
+  let nextPosContent = State.getCellContent(State.LPD.headPositionNext);
+  if (nextPosContent === Constants.CellContent.JUMP) {
     // nothing
   } else {
-    placeCellContent(LPD.headPositionNext, CellContent.HEAD);
+    State.placeCellContent(State.LPD.headPositionNext, Constants.CellContent.HEAD);
   }
 
-  let keyForHead = locationToKey(LPD.headPositionNext);
-  GBD.extraLocationData.set(keyForHead, LPD.headDirection);
+  let keyForHead = locationToKey(State.LPD.headPositionNext);
+  State.GBD.extraLocationData.set(keyForHead, State.LPD.headDirection);
 
-  LPD.headPositionCurrent = [LPD.headPositionNext[0], LPD.headPositionNext[1]];
+  State.LPD.headPositionCurrent = [State.LPD.headPositionNext[0], State.LPD.headPositionNext[1]];
 
-  LPD.playerHeadIndex = LPD.playerHeadIndex + 1;
+  State.LPD.playerHeadIndex = State.LPD.playerHeadIndex + 1;
 
-  LPD.setLocationAtIndex(LPD.playerHeadIndex, LPD.headPositionCurrent);
+  State.LPD.setLocationAtIndex(State.LPD.playerHeadIndex, State.LPD.headPositionCurrent);
 
 }
 
-function locationToKey(location) {
+export function locationToKey(location) {
   return String(location[0]) + '_' + String(location[1]);
 }
 
 function moveTailAhead() {
 
-  const tailLocation = LPD.getLocationAtIndex(LPD.playerTailIndex);
+  const tailLocation = State.LPD.getLocationAtIndex(State.LPD.playerTailIndex);
 
-  let nextPosContent = getCellContent(tailLocation);
-  if (nextPosContent === CellContent.JUMP) {
-    placeCellContent(tailLocation, CellContent.BODY);
+  let nextPosContent = State.getCellContent(tailLocation);
+  if (nextPosContent === Constants.CellContent.JUMP) {
+    State.placeCellContent(tailLocation, Constants.CellContent.BODY);
   } else {
-    placeCellContent(tailLocation, CellContent.SPACE);
+    State.placeCellContent(tailLocation, Constants.CellContent.SPACE);
   }
 
-  LPD.removeLocationAtIndex(LPD.playerTailIndex);
+  State.LPD.removeLocationAtIndex(State.LPD.playerTailIndex);
 
-  LPD.playerTailIndex = LPD.playerTailIndex + 1;
+  State.LPD.playerTailIndex = State.LPD.playerTailIndex + 1;
 }
 
 function processTap(event) {
@@ -545,49 +548,46 @@ function processTap(event) {
 
   if (buttonId === 'button-pause') {
 
-    RD.pressedKey = KeyboardKey.P;
+    State.RD.pressedKey = Constants.KeyboardKey.P;
 
   } else if (buttonId === 'button-up') {
 
-    RD.pressedKey = KeyboardKey.UP;
+    State.RD.pressedKey = Constants.KeyboardKey.UP;
     
   } else if (buttonId === 'button-jump') {
 
-    RD.pressedKey = KeyboardKey.J;
+    State.RD.pressedKey = Constants.KeyboardKey.J;
     
   } else if (buttonId === 'button-left') {
   
-    RD.pressedKey = KeyboardKey.LEFT;
+    State.RD.pressedKey = Constants.KeyboardKey.LEFT;
     
   } else if (buttonId === 'button-right') {
 
-    RD.pressedKey = KeyboardKey.RIGHT;
+    State.RD.pressedKey = Constants.KeyboardKey.RIGHT;
     
   } else if (buttonId === 'button-down') {
 
-    RD.pressedKey = KeyboardKey.DOWN;
+    State.RD.pressedKey = Constants.KeyboardKey.DOWN;
     
   } else if (buttonId === 'button-restart') {
 
-    RD.pressedKey = KeyboardKey.R;
+    State.RD.pressedKey = Constants.KeyboardKey.R;
     restart();
     
   } else if (buttonId === 'button-minus') {
 
-    RD.pressedKey = KeyboardKey.MINUS;
+    State.RD.pressedKey = Constants.KeyboardKey.MINUS;
     
   } else if (buttonId === 'button-plus') {
 
-    RD.pressedKey = KeyboardKey.PLUS;
+    State.RD.pressedKey = Constants.KeyboardKey.PLUS;
     
   }
   
 }
 
-document.addEventListener('keydown', processKeydown);
-window.addEventListener('load', play);
-
-document.addEventListener('DOMContentLoaded', function() {
+export function attachEventHandlers() {
 
   const mobilecontrols = getById('mobile-controls');
   mobilecontrols.addEventListener('touchstart', processTap);
@@ -595,4 +595,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const bareBonesToggle = getById('bare-bones-toggle');
   bareBonesToggle.addEventListener('click', toggleBareBones);
 
-});
+  document.addEventListener('keydown', processKeydown);
+
+}
+
+

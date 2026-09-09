@@ -1,3 +1,7 @@
+"use strict";
+
+import * as Draw from './draw.js';
+import * as Constants from './constants.js';
 
 const littlePlayerData = {
 
@@ -25,7 +29,7 @@ const littlePlayerData = {
 
   tailPosition: [0, 0],
 
-  headDirection: Direction.RIGHT,
+  headDirection: Constants.Direction.RIGHT,
 
   playerHeadIndex: 0,
 
@@ -33,7 +37,7 @@ const littlePlayerData = {
 
 };
 
-const LPD = littlePlayerData;
+export const LPD = littlePlayerData;
 
 const gameBoardData = {
   score: 0,
@@ -44,21 +48,25 @@ const gameBoardData = {
   showingBareBones: true
 }
 
-const GBD = gameBoardData;
+export const GBD = gameBoardData;
 
 const runningData = {
-  pressedKey: KeyboardKey.NO_KEY,
+  pressedKey: Constants.KeyboardKey.NO_KEY,
   paused: false,
   delayInterval: 0,
   gameOver: false,
   deathDelay: 45
 }
 
-const RD = runningData;
+export const RD = runningData;
 
-function placeCellContent(location, block) {
+export function placeCellContent(location, block) {
 
-  drawSquare(location, block);
+  if (block == undefined) {
+    alert("undef")
+  }
+
+  Draw.drawSquare(location, block);
 
   let rowNumber = location[0];
   let colNumber = location[1];
@@ -71,7 +79,7 @@ function placeCellContent(location, block) {
   actualRow.textContent = text;
 }
 
-function getCellContent(location) {
+export function getCellContent(location) {
 
   let row = location[0];
   let col = location[1];

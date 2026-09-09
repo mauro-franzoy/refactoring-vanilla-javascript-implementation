@@ -1,12 +1,13 @@
+"use strict";
 
-const Direction = Object.freeze({
+export const Direction = Object.freeze({
   RIGHT: 'RIGHT',
   LEFT: 'LEFT',
   UP: 'UP',
   DOWN: 'DOWN'
 });
 
-const Color = Object.freeze({
+export const Color = Object.freeze({
   SOIL: 'PaleGreen',
   WALL: 'LightSteelBlue',
   FRUIT: 'red',
@@ -21,7 +22,7 @@ const Color = Object.freeze({
   JUMP_MARK: 'DarkOrange'
 });
 
-const KeyboardKey = Object.freeze({
+export const KeyboardKey = Object.freeze({
   RIGHT: 'ArrowRight',
   LEFT: 'ArrowLeft',
   UP: 'ArrowUp',
@@ -36,7 +37,7 @@ const KeyboardKey = Object.freeze({
   NO_KEY: null
 });
 
-const CellContent = Object.freeze({
+export const CellContent = Object.freeze({
   BODY: 'B',
   HEAD: 'H',
   FRUIT: 'F',

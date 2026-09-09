@@ -1,10 +1,18 @@
+"use strict";
+
+import * as Logic from './logic.js';
+import * as State from './state.js';
+import * as Constants from './constants.js';
+
 let cbCtx = null;
+let canvasBoard = Logic.getById("canvas-board");
+cbCtx = canvasBoard.getContext("2d");
 
 function drawFruit(position, mainColor) {
 
   let x = position[1] * 20;
   let y = position[0] * 20;
-  cbCtx.fillStyle = Color.SOIL;
+  cbCtx.fillStyle = Constants.Color.SOIL;
   cbCtx.fillRect(x, y, 20, 20);
 
   // main part
@@ -16,18 +24,18 @@ function drawFruit(position, mainColor) {
   // stem cavity
   cbCtx.beginPath();
   cbCtx.arc(x + 10, y, 4, 0, -1 * Math.PI);
-  cbCtx.fillStyle = Color.SOIL;
+  cbCtx.fillStyle = Constants.Color.SOIL;
   cbCtx.fill();
 
   // basin
   cbCtx.beginPath();
   cbCtx.arc(x + 10, y + 20, 4, Math.PI, 0);
-  cbCtx.fillStyle = Color.SOIL;
+  cbCtx.fillStyle = Constants.Color.SOIL;
   cbCtx.fill();
 
   // leaf
   cbCtx.beginPath();
-  cbCtx.fillStyle = Color.LEAF;
+  cbCtx.fillStyle = Constants.Color.LEAF;
   cbCtx.moveTo(x + 14, y);
   cbCtx.lineTo(x + 10, y + 4);
   cbCtx.lineTo(x + 16, y + 2);
@@ -36,7 +44,7 @@ function drawFruit(position, mainColor) {
 
   //stem
   cbCtx.beginPath();
-  cbCtx.fillStyle = Color.STEM;
+  cbCtx.fillStyle = Constants.Color.STEM;
   cbCtx.moveTo(x + 11, y);
   cbCtx.lineTo(x + 10, y + 4);
   cbCtx.lineTo(x + 12, y + 0);
@@ -44,27 +52,27 @@ function drawFruit(position, mainColor) {
   cbCtx.fill();
 
   //shine
-  drawShine(position, Color.SHINE);
+  drawShine(position, Constants.Color.SHINE);
 }
 
-function drawSquare(position, cellContent) {
+export function drawSquare(position, cellContent) {
 
-  if (cellContent === CellContent.HEAD ||
-    cellContent === CellContent.BODY ||
-    cellContent === CellContent.JUMP) {
+  if (cellContent === Constants.CellContent.HEAD ||
+    cellContent === Constants.CellContent.BODY ||
+    cellContent === Constants.CellContent.JUMP) {
     // player parts are handled separately
     return;
   }
 
-  if (cellContent === CellContent.SPACE) {
-    drawRawSquare(position, Color.SOIL);
-  } else if (cellContent === CellContent.WALL) {
-    drawRawSquare(position, Color.WALL);
-  } else if (cellContent === CellContent.KILLING_FRUIT) {
-    drawFruit(position, Color.KILLING_FRUIT);
+  if (cellContent === Constants.CellContent.SPACE) {
+    drawRawSquare(position, Constants.Color.SOIL);
+  } else if (cellContent === Constants.CellContent.WALL) {
+    drawRawSquare(position, Constants.Color.WALL);
+  } else if (cellContent === Constants.CellContent.KILLING_FRUIT) {
+    drawFruit(position, Constants.Color.KILLING_FRUIT);
     return;
-  } else if (cellContent === CellContent.FRUIT) {
-    drawFruit(position, Color.FRUIT);
+  } else if (cellContent === Constants.CellContent.FRUIT) {
+    drawFruit(position, Constants.Color.FRUIT);
     return;
   }
 }
@@ -100,12 +108,12 @@ function drawJumpDetails(position, color) {
   cbCtx.closePath();
   cbCtx.fill();
 
-  let keyExtraLocationData = locationToKey(position);
-  let direction = GBD.extraLocationData.get(keyExtraLocationData);
+  let keyExtraLocationData = Logic.locationToKey(position);
+  let direction = State.GBD.extraLocationData.get(keyExtraLocationData);
 
-  if (Direction.RIGHT === direction || Direction.LEFT === direction) {
+  if (Constants.Direction.RIGHT === direction || Constants.Direction.LEFT === direction) {
     cbCtx.beginPath();
-    cbCtx.strokeStyle = Color.JUMP_MARK;
+    cbCtx.strokeStyle = Constants.Color.JUMP_MARK;
     cbCtx.moveTo(x + 2, y + 2);
     cbCtx.lineTo(x + 5, y + 4);
     cbCtx.lineTo(x + 15, y + 4);
@@ -113,15 +121,15 @@ function drawJumpDetails(position, color) {
     cbCtx.stroke();
 
     cbCtx.beginPath();
-    cbCtx.strokeStyle = Color.JUMP_MARK;
+    cbCtx.strokeStyle = Constants.Color.JUMP_MARK;
     cbCtx.moveTo(x + 2, y + 18);
     cbCtx.lineTo(x + 5, y + 16);
     cbCtx.lineTo(x + 15, y + 16);
     cbCtx.lineTo(x + 18, y + 18);
     cbCtx.stroke();
-  } else if (Direction.UP === direction || Direction.DOWN === direction) {
+  } else if (Constants.Direction.UP === direction || Constants.Direction.DOWN === direction) {
     cbCtx.beginPath();
-    cbCtx.strokeStyle = Color.JUMP_MARK;
+    cbCtx.strokeStyle = Constants.Color.JUMP_MARK;
     cbCtx.moveTo(x + 2, y + 2);
     cbCtx.lineTo(x + 4, y + 5);
     cbCtx.lineTo(x + 4, y + 15);
@@ -129,7 +137,7 @@ function drawJumpDetails(position, color) {
     cbCtx.stroke();
 
     cbCtx.beginPath();
-    cbCtx.strokeStyle = Color.JUMP_MARK;
+    cbCtx.strokeStyle = Constants.Color.JUMP_MARK;
     cbCtx.moveTo(x + 18, y + 2);
     cbCtx.lineTo(x + 16, y + 5);
     cbCtx.lineTo(x + 16, y + 15);
@@ -140,22 +148,22 @@ function drawJumpDetails(position, color) {
 }
 
 function drawLittlePlayerBodyJump(position, toggle) {
-  drawLittlePlayerBodyPivotWithColor(position, toggle, Color.BODY);
-  drawJumpDetails(position, Color.SHINE);
+  drawLittlePlayerBodyPivotWithColor(position, toggle, Constants.Color.BODY);
+  drawJumpDetails(position, Constants.Color.SHINE);
 }
 
 function drawLittlePlayerBodyJumpDeath(position, toggle, color) {
   drawLittlePlayerBodyPivotWithColor(position, toggle, color);
-  drawJumpDetails(position, Color.SHINE);
+  drawJumpDetails(position, Constants.Color.SHINE);
 }
 
 function drawLittlePlayerBodyJumpWithColor(position, toggle, color) {
   drawLittlePlayerBodyPivot(position, toggle, color);
-  drawJumpDetails(position, Color.SHINE);
+  drawJumpDetails(position, Constants.Color.SHINE);
 }
 
 function drawLittlePlayerWavyBody(position, toggle) {
-  drawLittlePlayerWavyBodyWithColor(position, toggle, Color.BODY);
+  drawLittlePlayerWavyBodyWithColor(position, toggle, Constants.Color.BODY);
 }
 
 function drawLittlePlayerWavyBodyDeath(position, toggle, color) {
@@ -167,31 +175,13 @@ function drawLittlePlayerWavyBodyWithColor(position, toggle, color) {
   let x = position[1] * 20;
   let y = position[0] * 20;
 
-  cbCtx.fillStyle = Color.SOIL;
+  cbCtx.fillStyle = Constants.Color.SOIL;
   cbCtx.fillRect(x, y, 20, 20);
 
-  let keyExtraLocationData = locationToKey(position);
-  let direction = GBD.extraLocationData.get(keyExtraLocationData);
+  let keyExtraLocationData = Logic.locationToKey(position);
+  let direction = State.GBD.extraLocationData.get(keyExtraLocationData);
 
-  if (direction === Direction.RIGHT) {
-
-    let col = position[1];
-    let offSet = (toggle + col) % 2;
-    if (offSet == 0) {
-      offSet = 1;
-    } else {
-      offSet = - 1;
-    }
-
-    x = position[1] * 20;
-    y = position[0] * 20 + 1 + offSet;
-    cbCtx.fillStyle = color;
-    cbCtx.fillRect(x, y + 2, 20, 18 - 4);
-
-    cbCtx.fillRect(x + 4, y, 20 - 6, 2);
-    cbCtx.fillRect(x + 4, y + 16, 20 - 6, 2);
-
-  } else if (direction === Direction.LEFT) {
+  if (direction === Constants.Direction.RIGHT) {
 
     let col = position[1];
     let offSet = (toggle + col) % 2;
@@ -209,7 +199,25 @@ function drawLittlePlayerWavyBodyWithColor(position, toggle, color) {
     cbCtx.fillRect(x + 4, y, 20 - 6, 2);
     cbCtx.fillRect(x + 4, y + 16, 20 - 6, 2);
 
-  } else if (direction === Direction.UP) {
+  } else if (direction === Constants.Direction.LEFT) {
+
+    let col = position[1];
+    let offSet = (toggle + col) % 2;
+    if (offSet == 0) {
+      offSet = 1;
+    } else {
+      offSet = - 1;
+    }
+
+    x = position[1] * 20;
+    y = position[0] * 20 + 1 + offSet;
+    cbCtx.fillStyle = color;
+    cbCtx.fillRect(x, y + 2, 20, 18 - 4);
+
+    cbCtx.fillRect(x + 4, y, 20 - 6, 2);
+    cbCtx.fillRect(x + 4, y + 16, 20 - 6, 2);
+
+  } else if (direction === Constants.Direction.UP) {
 
     let row = position[0];
     let offSet = (toggle + row) % 2;
@@ -227,7 +235,7 @@ function drawLittlePlayerWavyBodyWithColor(position, toggle, color) {
     cbCtx.fillRect(x, y + 4, 2, 20 - 6);
     cbCtx.fillRect(x + 16, y + 4, 2, 20 - 6);
 
-  } else if (direction === Direction.DOWN) {
+  } else if (direction === Constants.Direction.DOWN) {
 
     let row = position[0];
     let offSet = (toggle + row) % 2;
@@ -248,7 +256,7 @@ function drawLittlePlayerWavyBodyWithColor(position, toggle, color) {
 }
 
 function drawLittlePlayerTail(position) {
-  drawLittlePlayerTailWithColor(position, Color.BODY);
+  drawLittlePlayerTailWithColor(position, Constants.Color.BODY);
 }
 
 function drawLittlePlayerTailDeath(position, color) {
@@ -260,13 +268,13 @@ function drawLittlePlayerTailWithColor(position, color) {
   let x = position[1] * 20;
   let y = position[0] * 20;
 
-  cbCtx.fillStyle = Color.SOIL;;
+  cbCtx.fillStyle = Constants.Color.SOIL;
   cbCtx.fillRect(x, y, 20, 20);
 
-  let keyExtraLocationData = locationToKey(position);
-  let direction = GBD.extraLocationData.get(keyExtraLocationData);
+  let keyExtraLocationData = Logic.locationToKey(position);
+  let direction = State.GBD.extraLocationData.get(keyExtraLocationData);
 
-  if (direction === Direction.RIGHT) {
+  if (direction === Constants.Direction.RIGHT) {
 
     x = position[1] * 20;
     y = position[0] * 20;
@@ -281,7 +289,7 @@ function drawLittlePlayerTailWithColor(position, color) {
     cbCtx.closePath();
     cbCtx.fill();
 
-  } else if (direction === Direction.LEFT) {
+  } else if (direction === Constants.Direction.LEFT) {
 
     x = position[1] * 20;
     y = position[0] * 20;
@@ -296,7 +304,7 @@ function drawLittlePlayerTailWithColor(position, color) {
     cbCtx.closePath();
     cbCtx.fill();
 
-  } else if (direction === Direction.UP) {
+  } else if (direction === Constants.Direction.UP) {
 
     x = position[1] * 20;
     y = position[0] * 20;
@@ -311,7 +319,7 @@ function drawLittlePlayerTailWithColor(position, color) {
     cbCtx.closePath();
     cbCtx.fill();
 
-  } else if (direction === Direction.DOWN) {
+  } else if (direction === Constants.Direction.DOWN) {
 
     x = position[1] * 20;
     y = position[0] * 20;
@@ -337,7 +345,7 @@ function positionToXY(position) {
 }
 
 function drawLittlePlayerBodyPivot(position, toggle) {
-  drawLittlePlayerBodyPivotWithColor(position, toggle, Color.BODY);
+  drawLittlePlayerBodyPivotWithColor(position, toggle, Constants.Color.BODY);
 }
 
 function drawLittlePlayerBodyPivotDeath(position, toggle, color) {
@@ -346,11 +354,11 @@ function drawLittlePlayerBodyPivotDeath(position, toggle, color) {
 
 function drawLittlePlayerBodyPivotWithColor(position, toggle, color) {
 
-  let headDirection = LPD.headDirection;
-  let headPosition = LPD.headPositionCurrent;
+  let headDirection = State.LPD.headDirection;
+  let headPosition = State.LPD.headPositionCurrent;
 
   let coord = positionToXY(position);
-  cbCtx.fillStyle = Color.SOIL;
+  cbCtx.fillStyle = Constants.Color.SOIL;
   cbCtx.fillRect(coord.x, coord.y, 20, 20);
 
   cbCtx.beginPath();
@@ -369,7 +377,7 @@ function drawLittlePlayerBodyPivotWithColor(position, toggle, color) {
 }
 
 function drawLittlePlayerHead() {
-  drawLittlePlayerHeadWithColor(Color.BODY);
+  drawLittlePlayerHeadWithColor(Constants.Color.BODY);
 }
 
 function drawLittlePlayerHeadDeath(color) {
@@ -378,15 +386,15 @@ function drawLittlePlayerHeadDeath(color) {
 
 function drawLittlePlayerHeadWithColor(color) {
 
-  let headDirection = LPD.headDirection;
-  let headPosition = LPD.headPositionCurrent;
+  let headDirection = State.LPD.headDirection;
+  let headPosition = State.LPD.headPositionCurrent;
 
   let x = headPosition[1] * 20;
   let y = headPosition[0] * 20;
-  cbCtx.fillStyle = Color.SOIL;
+  cbCtx.fillStyle = Constants.Color.SOIL;
   cbCtx.fillRect(x, y, 20, 20);
 
-  if (headDirection === Direction.RIGHT) {
+  if (headDirection === Constants.Direction.RIGHT) {
 
     // head
     cbCtx.beginPath();
@@ -398,7 +406,7 @@ function drawLittlePlayerHeadWithColor(color) {
     cbCtx.fillRect(x + 0, y + 3, 10, 14);
 
     // tongue
-    cbCtx.fillStyle = Color.TONGUE;
+    cbCtx.fillStyle = Constants.Color.TONGUE;
     cbCtx.fillRect(x + 20, y + 9, 6, 2);
 
     // tongue tips
@@ -406,13 +414,13 @@ function drawLittlePlayerHeadWithColor(color) {
     cbCtx.fillRect(x + 26, y + 11, 2, 1);
 
     // eyes         
-    cbCtx.fillStyle = Color.EYE;
+    cbCtx.fillStyle = Constants.Color.EYE;
     cbCtx.fillRect(x + 13, y + 5, 3, 2);
     cbCtx.fillRect(x + 13, y + 13, 3, 2);
 
 
 
-  } else if (headDirection === Direction.LEFT) {
+  } else if (headDirection === Constants.Direction.LEFT) {
 
     // head
     cbCtx.beginPath();
@@ -424,7 +432,7 @@ function drawLittlePlayerHeadWithColor(color) {
     cbCtx.fillRect(x + 10, y + 3, 10, 14);
 
     // tongue
-    cbCtx.fillStyle = Color.TONGUE;
+    cbCtx.fillStyle = Constants.Color.TONGUE;
     cbCtx.fillRect(x - 6, y + 9, 6, 2);
 
     // tongue tips
@@ -432,11 +440,11 @@ function drawLittlePlayerHeadWithColor(color) {
     cbCtx.fillRect(x - 8, y + 11, 2, 1);
 
     // eyes         
-    cbCtx.fillStyle = Color.EYE;
+    cbCtx.fillStyle = Constants.Color.EYE;
     cbCtx.fillRect(x + 4, y + 5, 3, 2);
     cbCtx.fillRect(x + 4, y + 13, 3, 2);
 
-  } else if (headDirection === Direction.UP) {
+  } else if (headDirection === Constants.Direction.UP) {
 
     // head        
     cbCtx.beginPath();
@@ -448,7 +456,7 @@ function drawLittlePlayerHeadWithColor(color) {
     cbCtx.fillRect(x + 3, y + 10, 14, 10);
 
     // tongue
-    cbCtx.fillStyle = Color.TONGUE;
+    cbCtx.fillStyle = Constants.Color.TONGUE;
     cbCtx.fillRect(x + 9, y - 6, 2, 6);
 
     // tongue tips
@@ -456,11 +464,11 @@ function drawLittlePlayerHeadWithColor(color) {
     cbCtx.fillRect(x + 11, y - 7, 1, 2);
 
     // eyes         
-    cbCtx.fillStyle = Color.EYE;
+    cbCtx.fillStyle = Constants.Color.EYE;
     cbCtx.fillRect(x + 5, y + 4, 2, 3);
     cbCtx.fillRect(x + 13, y + 4, 2, 3);
 
-  } else if (headDirection === Direction.DOWN) {
+  } else if (headDirection === Constants.Direction.DOWN) {
 
     // head         
     cbCtx.beginPath();
@@ -471,7 +479,7 @@ function drawLittlePlayerHeadWithColor(color) {
     //neck
     cbCtx.fillRect(x + 3, y + 0, 14, 10);
 
-    cbCtx.fillStyle = Color.TONGUE;
+    cbCtx.fillStyle = Constants.Color.TONGUE;
     cbCtx.fillRect(x + 9, y + 20, 2, 6);
 
     // tongue tips
@@ -479,7 +487,7 @@ function drawLittlePlayerHeadWithColor(color) {
     cbCtx.fillRect(x + 11, y + 26, 1, 2);
 
     // eyes         
-    cbCtx.fillStyle = Color.EYE;
+    cbCtx.fillStyle = Constants.Color.EYE;
     cbCtx.fillRect(x + 5, y + 13, 2, 3);
     cbCtx.fillRect(x + 13, y + 13, 2, 3);
 
@@ -488,29 +496,29 @@ function drawLittlePlayerHeadWithColor(color) {
 }
 
 function reDrawLittlePlayerHeadSourroundingsToHideOldTongue() {
-  let headDirection = LPD.headDirection;
-  let headPosition = LPD.headPositionCurrent;
+  let headDirection = State.LPD.headDirection;
+  let headPosition = State.LPD.headPositionCurrent;
 
   let row = headPosition[0];
   let col = headPosition[1];
   let positionToReDraw = null;
 
-  if (headDirection === Direction.RIGHT) {
+  if (headDirection === Constants.Direction.RIGHT) {
 
     reDrawSquare([row - 1, col - 1]);
     reDrawSquare([row + 1, col - 1]);
 
-  } else if (headDirection === Direction.LEFT) {
+  } else if (headDirection === Constants.Direction.LEFT) {
 
     reDrawSquare([row - 1, col + 1]);
     reDrawSquare([row + 1, col + 1]);
 
-  } else if (headDirection === Direction.UP) {
+  } else if (headDirection === Constants.Direction.UP) {
 
     reDrawSquare([row + 1, col + 1]);
     reDrawSquare([row + 1, col - 1]);
 
-  } else if (headDirection === Direction.DOWN) {
+  } else if (headDirection === Constants.Direction.DOWN) {
 
     reDrawSquare([row - 1, col + 1]);
     reDrawSquare([row - 1, col - 1]);
@@ -519,8 +527,8 @@ function reDrawLittlePlayerHeadSourroundingsToHideOldTongue() {
 
 }
 
-function clearHeadSourroundings() {
-  let headPosition = LPD.headPositionCurrent;
+export function clearHeadSourroundings() {
+  let headPosition = State.LPD.headPositionCurrent;
 
   let row = headPosition[0];
   let col = headPosition[1];
@@ -537,34 +545,34 @@ function clearHeadSourroundings() {
 }
 
 function reDrawSquare(positionToReDraw) {
-  let cellContent = getCellContent(positionToReDraw);
+  let cellContent = State.getCellContent(positionToReDraw);
   drawSquare(positionToReDraw, cellContent);
 }
 
-async function drawPlayer() {
+export async function drawPlayer() {
   let toggle = 0;
   while (true) {
-    if (!RD.paused && !RD.gameOver) {
+    if (!State.RD.paused && !State.RD.gameOver) {
       drawPlayerSync(toggle);
     }
-    await aDelay(RD.delayInterval / 2);
+    await Logic.aDelay(State.RD.delayInterval / 2);
     toggle = (toggle + 1) % 4;
   }
 }
 
 
 function drawPlayerSync(toggle) {
-  for (let i = LPD.playerTailIndex; i < LPD.playerHeadIndex; i++) {
-    let position = LPD.getLocationAtIndex(i);
-    if (getCellContent(position) === CellContent.JUMP) {
+  for (let i = State.LPD.playerTailIndex; i < State.LPD.playerHeadIndex; i++) {
+    let position = State.LPD.getLocationAtIndex(i);
+    if (State.getCellContent(position) === Constants.CellContent.JUMP) {
       drawLittlePlayerBodyJump(position, toggle);
     } else {
-      if (i == LPD.playerTailIndex) {
+      if (i == State.LPD.playerTailIndex) {
         drawLittlePlayerTail(position, toggle);
       } else {
-        let positionBefore = LPD.getLocationAtIndex(i - 1);
-        let position = LPD.getLocationAtIndex(i);
-        let positionAfter = LPD.getLocationAtIndex(i + 1);
+        let positionBefore = State.LPD.getLocationAtIndex(i - 1);
+        let position = State.LPD.getLocationAtIndex(i);
+        let positionAfter = State.LPD.getLocationAtIndex(i + 1);
         if (positionBefore[0] != positionAfter[0] && positionBefore[1] != positionAfter[1]) {
           // its a pivot
           drawLittlePlayerBodyPivot(position, toggle);
@@ -578,34 +586,34 @@ function drawPlayerSync(toggle) {
   drawLittlePlayerHead();
 }
 
-function drawPlayerDeathSync(toggle, color) {
+export function drawPlayerDeathSync(toggle, color) {
   drawPlayerDeath(toggle, color);
 }
 
 
 async function drawPlayerDeath(toggle, color) {
-  await aDelay(RD.deathDelay);
+  await Logic.aDelay(State.RD.deathDelay);
   drawLittlePlayerHeadDeath(color);
-  for (let i = LPD.playerHeadIndex - 1; i >= LPD.playerTailIndex; i--) {
-    let position = LPD.getLocationAtIndex(i);
-    if (getCellContent(position) === CellContent.JUMP) {
-      await aDelay(RD.deathDelay);
+  for (let i = State.LPD.playerHeadIndex - 1; i >= State.LPD.playerTailIndex; i--) {
+    let position = State.LPD.getLocationAtIndex(i);
+    if (State.getCellContent(position) === Constants.CellContent.JUMP) {
+      await Logic.aDelay(State.RD.deathDelay);
       drawLittlePlayerBodyJumpDeath(position, toggle, color);
     } else {
-      if (i == LPD.playerTailIndex) {
-        await aDelay(RD.deathDelay);
+      if (i == State.LPD.playerTailIndex) {
+        await Logic.aDelay(State.RD.deathDelay);
         drawLittlePlayerTailDeath(position, color);
       } else {
-        let positionBefore = LPD.getLocationAtIndex(i - 1);
-        let position = LPD.getLocationAtIndex(i);
-        let positionAfter = LPD.getLocationAtIndex(i + 1);
+        let positionBefore = State.LPD.getLocationAtIndex(i - 1);
+        let position = State.LPD.getLocationAtIndex(i);
+        let positionAfter = State.LPD.getLocationAtIndex(i + 1);
         if (positionBefore[0] != positionAfter[0] && positionBefore[1] != positionAfter[1]) {
           // its a pivot
-          await aDelay(RD.deathDelay);
+          await Logic.aDelay(State.RD.deathDelay);
           drawLittlePlayerBodyPivotDeath(position, toggle, color);
         } else {
           // regular body part
-          await aDelay(RD.deathDelay);
+          await Logic.aDelay(State.RD.deathDelay);
           drawLittlePlayerWavyBodyDeath(position, toggle, color);
         }
       }
