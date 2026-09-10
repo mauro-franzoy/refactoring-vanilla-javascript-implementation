@@ -36,35 +36,49 @@ function doSomeInitialization() {
   getById("score").textContent = "0";
   getById("speed").textContent = State.GBD.choosenSpeed;
 
-  getById("row-0").textContent = "WWWWWWWWWWWWWWWWWWWWWWWW";
-  getById("row-1").textContent = "W                      W";
-  getById("row-2").textContent = "W                      W";
-  getById("row-3").textContent = "WBBH                   W";
-  getById("row-4").textContent = "WB                     W";
-  getById("row-5").textContent = "WB                     W";
-  getById("row-6").textContent = "WB                     W";
-  getById("row-7").textContent = "WB                     W";
-  getById("row-8").textContent = "WB                  F  W";
-  getById("row-9").textContent = "WB                     W";
-  getById("row-10").textContent = "WB                     W";
-  getById("row-11").textContent = "WB                     W";
-  getById("row-11").textContent = "WB                     W";
-  getById("row-12").textContent = "W                      W";
-  getById("row-13").textContent = "W                      W";
-  getById("row-14").textContent = "W                      W";
-  getById("row-15").textContent = "W                      W";
-  getById("row-16").textContent = "W                      W";
-  getById("row-17").textContent = "W                      W";
-  getById("row-18").textContent = "W                      W";
-  getById("row-19").textContent = "W                      W";
-  getById("row-20").textContent = "W                      W";
-  getById("row-21").textContent = "W                      W";
-  getById("row-22").textContent = "W                      W";
-  getById("row-23").textContent = "WWWWWWWWWWWWWWWWWWWWWWWW";
+  State.storeRowOfCellContent("row-0", "WWWWWWWWWWWWWWWWWWWWWWWW");
+  State.storeRowOfCellContent("row-1", "W                      W");
+  State.storeRowOfCellContent("row-2", "W                      W");
+  State.storeRowOfCellContent("row-3", "WBBH                   W");
+  State.storeRowOfCellContent("row-4", "WB                     W");
+  State.storeRowOfCellContent("row-5", "WB                     W");
+  State.storeRowOfCellContent("row-6", "WB                     W");
+  State.storeRowOfCellContent("row-7", "WB                     W");
+  State.storeRowOfCellContent("row-8", "WB                  F  W");
+  State.storeRowOfCellContent("row-9", "WB                     W");
+  State.storeRowOfCellContent("row-10", "WB                     W");
+  State.storeRowOfCellContent("row-11", "WB                     W");
+  State.storeRowOfCellContent("row-11", "WB                     W");
+  State.storeRowOfCellContent("row-12", "W                      W");
+  State.storeRowOfCellContent("row-13", "W                      W");
+  State.storeRowOfCellContent("row-14", "W                      W");
+  State.storeRowOfCellContent("row-15", "W                      W");
+  State.storeRowOfCellContent("row-16", "W                      W");
+  State.storeRowOfCellContent("row-17", "W                      W");
+  State.storeRowOfCellContent("row-18", "W                      W");
+  State.storeRowOfCellContent("row-19", "W                      W");
+  State.storeRowOfCellContent("row-20", "W                      W");
+  State.storeRowOfCellContent("row-21", "W                      W");
+  State.storeRowOfCellContent("row-22", "W                      W");
+  State.storeRowOfCellContent("row-23", "WWWWWWWWWWWWWWWWWWWWWWWW");
+
+  drawAllRawCells();
 
   translateCharBoardToCanvas();
 
   toggleBareBones();
+}
+
+function drawAllRawCells() {
+  let position = null;
+  let cellContent = null;
+  for (let i = 0; i <= 23; i++) {
+    for (let j = 0; j <= 23; j++) {
+      position = [i, j];
+      cellContent = State.getCellContent(position);
+      Draw.drawRawCellContent(position, cellContent);
+    }
+  }
 }
 
 function translateCharBoardToCanvas() {

@@ -32,7 +32,9 @@ const littlePlayerData = {
 
   playerHeadIndex: 0,
 
-  playerTailIndex: 0
+  playerTailIndex: 0,
+
+  cellsContent: new Map()
 
 };
 
@@ -61,7 +63,18 @@ export const RD = runningData;
 
 export function storeCellContent(location, block) {
 
-  // TODO handle state as a local variable
+  let rowNumber = location[0];
+  let colNumber = location[1];
+
+  let rowName = "row-" + rowNumber;
+  let text = LPD.cellsContent.get(rowName);
+
+  text = text.substring(0, colNumber) + block + text.substring(colNumber + 1);
+  LPD.cellsContent.set(rowName, text);
+}
+
+export function storeRowOfCellContent(rowId, rowContent) {
+  LPD.cellsContent.set(rowId, rowContent);
 }
 
 export function getCellContent(location) {
@@ -70,7 +83,7 @@ export function getCellContent(location) {
   let col = location[1];
 
   let rowName = "row-" + row;
-  let text = document.getElementById(rowName).textContent;
+  let text = LPD.cellsContent.get(rowName);
 
   let block = text.substring(col, col + 1);
 
