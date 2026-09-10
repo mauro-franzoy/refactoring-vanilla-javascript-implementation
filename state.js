@@ -61,15 +61,7 @@ export const RD = runningData;
 
 export function storeCellContent(location, block) {
 
-  let rowNumber = location[0];
-  let colNumber = location[1];
-
-  let rowName = "row-" + rowNumber;
-  let actualRow = document.getElementById(rowName);
-  let text = actualRow.textContent;
-
-  text = text.substring(0, colNumber) + block + text.substring(colNumber + 1);
-  actualRow.textContent = text;
+  // TODO handle state as a local variable
 }
 
 export function getCellContent(location) {

@@ -585,6 +585,7 @@ function processTap(event) {
 
 function placeCellContent(location, block) {
   Draw.drawSquare(location, block);
+  Draw.drawRawCellContent(location, block)
   State.storeCellContent(location, block);
 }
 
