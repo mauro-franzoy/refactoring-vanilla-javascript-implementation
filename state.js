@@ -60,9 +60,7 @@ const runningData = {
 
 export const RD = runningData;
 
-export function placeCellContent(location, block) {
-
-  Draw.drawSquare(location, block);
+export function storeCellContent(location, block) {
 
   let rowNumber = location[0];
   let colNumber = location[1];

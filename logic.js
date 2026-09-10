@@ -93,7 +93,7 @@ function placeFruit() {
     let cellContent = State.getCellContent(fruitPosition);
     if (cellContent === Constants.CellContent.SPACE) {
       State.GBD.fruitCount = State.GBD.fruitCount + 1;
-      State.placeCellContent(fruitPosition, Constants.CellContent.FRUIT);
+      placeCellContent(fruitPosition, Constants.CellContent.FRUIT);
     }
   }
 }
@@ -106,7 +106,7 @@ function placeKillingFruit() {
     let cellContent = State.getCellContent(killingPosition);
     if (cellContent === Constants.CellContent.SPACE && !nearHeadZone(killingPosition)) {
       State.GBD.killingFruitCount = State.GBD.killingFruitCount + 1;
-      State.placeCellContent(killingPosition, Constants.CellContent.KILLING_FRUIT);
+      placeCellContent(killingPosition, Constants.CellContent.KILLING_FRUIT);
       kfsList[kfsPointer] = killingPosition;
       increseKFP();
     }
@@ -376,7 +376,7 @@ function checkForSpecialKeys() {
 }
 
 function markTheJump() {
-  State.placeCellContent(State.LPD.headPositionNext, Constants.CellContent.JUMP);
+  placeCellContent(State.LPD.headPositionNext, Constants.CellContent.JUMP);
 }
 
 function gameCycle() {
@@ -471,7 +471,7 @@ function moveKillingFruit() {
   if (killingLocation !== undefined) {
     let kfLocationContent = State.getCellContent(killingLocation);
     if (kfLocationContent === Constants.CellContent.KILLING_FRUIT) {
-      State.placeCellContent(killingLocation, Constants.CellContent.SPACE);
+      placeCellContent(killingLocation, Constants.CellContent.SPACE);
       increseKFP();
       State.GBD.killingFruitCount = State.GBD.killingFruitCount - 1;
     }
@@ -494,7 +494,7 @@ function moveHeadAhead() {
   if (currentPosContent === Constants.CellContent.JUMP) {
     // nothing
   } else {
-    State.placeCellContent(State.LPD.headPositionCurrent, Constants.CellContent.BODY);
+    placeCellContent(State.LPD.headPositionCurrent, Constants.CellContent.BODY);
   }
 
   let keyForBody = locationToKey(State.LPD.headPositionCurrent);
@@ -504,7 +504,7 @@ function moveHeadAhead() {
   if (nextPosContent === Constants.CellContent.JUMP) {
     // nothing
   } else {
-    State.placeCellContent(State.LPD.headPositionNext, Constants.CellContent.HEAD);
+    placeCellContent(State.LPD.headPositionNext, Constants.CellContent.HEAD);
   }
 
   let keyForHead = locationToKey(State.LPD.headPositionNext);
@@ -528,9 +528,9 @@ function moveTailAhead() {
 
   let nextPosContent = State.getCellContent(tailLocation);
   if (nextPosContent === Constants.CellContent.JUMP) {
-    State.placeCellContent(tailLocation, Constants.CellContent.BODY);
+    placeCellContent(tailLocation, Constants.CellContent.BODY);
   } else {
-    State.placeCellContent(tailLocation, Constants.CellContent.SPACE);
+    placeCellContent(tailLocation, Constants.CellContent.SPACE);
   }
 
   State.LPD.removeLocationAtIndex(State.LPD.playerTailIndex);
@@ -585,6 +585,11 @@ function processTap(event) {
     
   }
   
+}
+
+function placeCellContent(location, block) {
+  Draw.drawSquare(location, block);
+  State.storeCellContent(location, block);
 }
 
 export function attachEventHandlers() {
