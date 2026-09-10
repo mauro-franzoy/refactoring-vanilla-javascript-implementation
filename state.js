@@ -62,10 +62,6 @@ export const RD = runningData;
 
 export function placeCellContent(location, block) {
 
-  if (block == undefined) {
-    alert("undef")
-  }
-
   Draw.drawSquare(location, block);
 
   let rowNumber = location[0];
