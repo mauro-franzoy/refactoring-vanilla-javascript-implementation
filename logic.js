@@ -6,7 +6,7 @@ import * as Constants from './constants.js';
 
 function setLocalizationData(index, position, direction) {
   State.LPD.setLocationAtIndex(index, position);
-  let keyForExtraLocationData = locationToKey(position);
+  let keyForExtraLocationData = State.locationToKey(position);
   State.GBD.extraLocationData.set(keyForExtraLocationData, direction);
 }
 
@@ -484,7 +484,7 @@ function incrementScore() {
   getById("score").textContent = "" + State.GBD.score;
 }
 
-export function getById(id) {
+function getById(id) {
   return document.getElementById(id);
 }
 
@@ -497,7 +497,7 @@ function moveHeadAhead() {
     placeCellContent(State.LPD.headPositionCurrent, Constants.CellContent.BODY);
   }
 
-  let keyForBody = locationToKey(State.LPD.headPositionCurrent);
+  let keyForBody = State.locationToKey(State.LPD.headPositionCurrent);
   State.GBD.extraLocationData.set(keyForBody, State.LPD.headDirection);
 
   let nextPosContent = State.getCellContent(State.LPD.headPositionNext);
@@ -507,7 +507,7 @@ function moveHeadAhead() {
     placeCellContent(State.LPD.headPositionNext, Constants.CellContent.HEAD);
   }
 
-  let keyForHead = locationToKey(State.LPD.headPositionNext);
+  let keyForHead = State.locationToKey(State.LPD.headPositionNext);
   State.GBD.extraLocationData.set(keyForHead, State.LPD.headDirection);
 
   State.LPD.headPositionCurrent = [State.LPD.headPositionNext[0], State.LPD.headPositionNext[1]];
@@ -516,10 +516,6 @@ function moveHeadAhead() {
 
   State.LPD.setLocationAtIndex(State.LPD.playerHeadIndex, State.LPD.headPositionCurrent);
 
-}
-
-export function locationToKey(location) {
-  return String(location[0]) + '_' + String(location[1]);
 }
 
 function moveTailAhead() {

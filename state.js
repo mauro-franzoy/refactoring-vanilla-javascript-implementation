@@ -85,3 +85,6 @@ export function getCellContent(location) {
   return block;
 }
 
+export function locationToKey(location) {
+  return String(location[0]) + '_' + String(location[1]);
+}

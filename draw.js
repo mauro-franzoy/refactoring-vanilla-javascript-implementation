@@ -1,12 +1,17 @@
 "use strict";
 
-import * as Logic from './logic.js';
 import * as State from './state.js';
 import * as Constants from './constants.js';
 
 let cbCtx = null;
-let canvasBoard = Logic.getById("canvas-board");
+let canvasBoard = document.getElementById("canvas-board");
 cbCtx = canvasBoard.getContext("2d");
+
+function aDelay(millis) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, millis);
+  });
+}
 
 function drawFruit(position, mainColor) {
 
@@ -108,7 +113,7 @@ function drawJumpDetails(position, color) {
   cbCtx.closePath();
   cbCtx.fill();
 
-  let keyExtraLocationData = Logic.locationToKey(position);
+  let keyExtraLocationData = State.locationToKey(position);
   let direction = State.GBD.extraLocationData.get(keyExtraLocationData);
 
   if (Constants.Direction.RIGHT === direction || Constants.Direction.LEFT === direction) {
@@ -178,7 +183,7 @@ function drawLittlePlayerWavyBodyWithColor(position, toggle, color) {
   cbCtx.fillStyle = Constants.Color.SOIL;
   cbCtx.fillRect(x, y, 20, 20);
 
-  let keyExtraLocationData = Logic.locationToKey(position);
+  let keyExtraLocationData = State.locationToKey(position);
   let direction = State.GBD.extraLocationData.get(keyExtraLocationData);
 
   if (direction === Constants.Direction.RIGHT) {
@@ -271,7 +276,7 @@ function drawLittlePlayerTailWithColor(position, color) {
   cbCtx.fillStyle = Constants.Color.SOIL;
   cbCtx.fillRect(x, y, 20, 20);
 
-  let keyExtraLocationData = Logic.locationToKey(position);
+  let keyExtraLocationData = State.locationToKey(position);
   let direction = State.GBD.extraLocationData.get(keyExtraLocationData);
 
   if (direction === Constants.Direction.RIGHT) {
@@ -555,7 +560,7 @@ export async function drawPlayer() {
     if (!State.RD.paused && !State.RD.gameOver) {
       drawPlayerSync(toggle);
     }
-    await Logic.aDelay(State.RD.delayInterval / 2);
+    await aDelay(State.RD.delayInterval / 2);
     toggle = (toggle + 1) % 4;
   }
 }
@@ -592,16 +597,16 @@ export function drawPlayerDeathSync(toggle, color) {
 
 
 async function drawPlayerDeath(toggle, color) {
-  await Logic.aDelay(State.RD.deathDelay);
+  await aDelay(State.RD.deathDelay);
   drawLittlePlayerHeadDeath(color);
   for (let i = State.LPD.playerHeadIndex - 1; i >= State.LPD.playerTailIndex; i--) {
     let position = State.LPD.getLocationAtIndex(i);
     if (State.getCellContent(position) === Constants.CellContent.JUMP) {
-      await Logic.aDelay(State.RD.deathDelay);
+      await aDelay(State.RD.deathDelay);
       drawLittlePlayerBodyJumpDeath(position, toggle, color);
     } else {
       if (i == State.LPD.playerTailIndex) {
-        await Logic.aDelay(State.RD.deathDelay);
+        await aDelay(State.RD.deathDelay);
         drawLittlePlayerTailDeath(position, color);
       } else {
         let positionBefore = State.LPD.getLocationAtIndex(i - 1);
@@ -609,11 +614,11 @@ async function drawPlayerDeath(toggle, color) {
         let positionAfter = State.LPD.getLocationAtIndex(i + 1);
         if (positionBefore[0] != positionAfter[0] && positionBefore[1] != positionAfter[1]) {
           // its a pivot
-          await Logic.aDelay(State.RD.deathDelay);
+          await aDelay(State.RD.deathDelay);
           drawLittlePlayerBodyPivotDeath(position, toggle, color);
         } else {
           // regular body part
-          await Logic.aDelay(State.RD.deathDelay);
+          await aDelay(State.RD.deathDelay);
           drawLittlePlayerWavyBodyDeath(position, toggle, color);
         }
       }
