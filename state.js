@@ -1,6 +1,5 @@
 "use strict";
 
-import * as Draw from './draw.js';
 import * as Constants from './constants.js';
 
 const littlePlayerData = {
