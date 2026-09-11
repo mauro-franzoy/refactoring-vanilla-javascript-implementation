@@ -436,26 +436,18 @@ async function doGameOver(mje) {
   await aDelay(State.RD.deathDelay * (State.LPD.playerHeadIndex - State.LPD.playerTailIndex + 5));
 
   const messagewrapper = getById("message-wrapper");
-  messagewrapper.style.border = '3px solid red';
-  messagewrapper.style.transition = 'border-color 0.5s ease';
+  messagewrapper.style.background = 'red';
+  messagewrapper.style.transition = 'background 0.5s ease';
   setTimeout(() => {
-    messagewrapper.style.borderColor = 'transparent';
-    messagewrapper.style.border = 'none';
+    messagewrapper.style.background = 'lightgray';
   }, 550);
 
   await aDelay(160);
 
   const messagebox = getById("message");
-  messagebox.style.color = "CornflowerBlue"; 
+  messagebox.style.color = "red"; 
   messagebox.style.fontSize = "14x"; 
   messagebox.innerHTML = "<b>Game Over: " + mje + "</b>"
-  messagebox.style.border = '3px solid red';
-  messagebox.style.transition = 'border-color 1.5s ease';
-  setTimeout(() => {
-    messagebox.style.borderColor = 'transparent';
-    messagebox.style.border = 'none';
-  }, 1550);
-
 }
 
 function movePlayerAhead() {
