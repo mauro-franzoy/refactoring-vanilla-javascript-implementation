@@ -281,7 +281,7 @@ function processKeydown(event) {
   } else if (event.key === 'j' || event.key === 'J') {
     event.preventDefault();
     event.stopPropagation();
-    State.RD.pressedKey = Constants.KeyboardKey.J;
+    State.LPD.jumped = 2;
 
   } else if (event.key === 'r' || event.key === 'R') {
     event.preventDefault();
@@ -405,7 +405,7 @@ function gameCycle() {
   } else if (nextCellContent === Constants.CellContent.FRUIT) {
     growPlayerAhead();
   } else if (nextCellContent === Constants.CellContent.BODY) {
-    if ((State.RD.pressedKey === Constants.KeyboardKey.J)) {
+    if ((State.LPD.jumped > 0)) {
       State.RD.pressedKey = Constants.KeyboardKey.NO_KEY;
       markTheJump();
       movePlayerAhead();
@@ -423,6 +423,7 @@ function gameCycle() {
     growToDeath();
 
   }
+  State.LPD.jumped--;
 }
 
 function isNextPositionSameAsTailPosition() {
@@ -558,7 +559,7 @@ function processTap(event) {
     
   } else if (buttonId === 'button-jump') {
 
-    State.RD.pressedKey = Constants.KeyboardKey.J;
+    State.LPD.jumped = 2;
     
   } else if (buttonId === 'button-left') {
   

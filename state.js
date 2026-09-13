@@ -34,7 +34,9 @@ const littlePlayerData = {
 
   playerTailIndex: 0,
 
-  cellsContent: new Map()
+  cellsContent: new Map(),
+
+  jumped: 0
 
 };
 
