@@ -403,10 +403,17 @@ function gameCycle() {
     (nextCellContent === Constants.CellContent.BODY && isNextPositionSameAsTailPosition())) {
     movePlayerAhead();
   } else if (nextCellContent === Constants.CellContent.FRUIT) {
-    growPlayerAhead();
+    if ((State.LPD.jumped > 0)) {
+      storeJumpedData(State.LPD.headPositionNext, Constants.CellContent.FRUIT)
+      markTheJump();
+      movePlayerAhead();
+    } else {
+      growPlayerAhead();
+    }
   } else if (nextCellContent === Constants.CellContent.BODY) {
     if ((State.LPD.jumped > 0)) {
       State.RD.pressedKey = Constants.KeyboardKey.NO_KEY;
+      storeJumpedData(State.LPD.headPositionNext, Constants.CellContent.BODY)
       markTheJump();
       movePlayerAhead();
       // nothing
@@ -420,10 +427,20 @@ function gameCycle() {
     Draw.drawPlayerDeathSync(1, Constants.Color.WALL);
     doGameOver("you hit a wall!!!");
   } else if (nextCellContent === Constants.CellContent.KILLING_FRUIT) {
-    growToDeath();
-
+     if ((State.LPD.jumped > 0)) {
+      storeJumpedData(State.LPD.headPositionNext, Constants.CellContent.KILLING_FRUIT)
+      markTheJump();
+      movePlayerAhead();
+    } else {
+      growToDeath();
+    }
   }
   State.LPD.jumped--;
+}
+
+function storeJumpedData(position, jumpedThing) {
+  let locationKey = State.locationToKey(position);
+  State.GBD.jumpedThingsData.set(locationKey, jumpedThing);
 }
 
 function isNextPositionSameAsTailPosition() {
@@ -531,7 +548,9 @@ function moveTailAhead() {
 
   let nextPosContent = State.getCellContent(tailLocation);
   if (nextPosContent === Constants.CellContent.JUMP) {
-    placeCellContent(tailLocation, Constants.CellContent.BODY);
+    let key = State.locationToKey(tailLocation);
+    let formerCellContent = State.GBD.jumpedThingsData.get(key);
+    placeCellContent(tailLocation, formerCellContent);
   } else {
     placeCellContent(tailLocation, Constants.CellContent.SPACE);
   }

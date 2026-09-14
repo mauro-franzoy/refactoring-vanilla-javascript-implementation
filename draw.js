@@ -115,11 +115,21 @@ function drawShine(position, color) {
   cbCtx.fill();
 }
 
+function getColorByJumpedContent(content) {
+  if (content == Constants.CellContent.KILLING_FRUIT) {
+    return Constants.Color.KILLING_FRUIT;
+  } else if (content == Constants.CellContent.FRUIT) {
+    return Constants.Color.FRUIT;
+  } else if (content == Constants.CellContent.BODY) {
+    return Constants.Color.JUMP_MARK;
+  }
+}
+
 function drawJumpDetails(position, color) {
   let x = position[1] * 20;
   let y = position[0] * 20;
   cbCtx.beginPath();
-  cbCtx.fillStyle = color;
+  cbCtx.fillStyle = color
   cbCtx.moveTo(x + 14 - 4, y + 5 + 1);
   cbCtx.lineTo(x + 14 - 4, y + 9 + 1);
   cbCtx.lineTo(x + 16 - 4, y + 7 + 1);
@@ -129,38 +139,63 @@ function drawJumpDetails(position, color) {
   let keyExtraLocationData = State.locationToKey(position);
   let direction = State.GBD.extraLocationData.get(keyExtraLocationData);
 
+  let key = State.locationToKey(position);
+  let formerCellContent = State.GBD.jumpedThingsData.get(key);
+  let detailColor = getColorByJumpedContent(formerCellContent);
+
   if (Constants.Direction.RIGHT === direction || Constants.Direction.LEFT === direction) {
     cbCtx.beginPath();
-    cbCtx.strokeStyle = Constants.Color.JUMP_MARK;
+    cbCtx.fillStyle = detailColor;
     cbCtx.moveTo(x + 2, y + 2);
     cbCtx.lineTo(x + 5, y + 4);
     cbCtx.lineTo(x + 15, y + 4);
     cbCtx.lineTo(x + 18, y + 2);
-    cbCtx.stroke();
+    cbCtx.moveTo(x + 2, y + 2);
+    cbCtx.lineTo(x + 5, y + 0);
+    cbCtx.lineTo(x + 15, y + 0);
+    cbCtx.lineTo(x + 18, y + 2);
+    cbCtx.closePath();
+    cbCtx.fill();
 
     cbCtx.beginPath();
-    cbCtx.strokeStyle = Constants.Color.JUMP_MARK;
+    cbCtx.fillStyle = detailColor;
     cbCtx.moveTo(x + 2, y + 18);
     cbCtx.lineTo(x + 5, y + 16);
     cbCtx.lineTo(x + 15, y + 16);
     cbCtx.lineTo(x + 18, y + 18);
-    cbCtx.stroke();
+    cbCtx.moveTo(x + 2, y + 18);
+    cbCtx.lineTo(x + 5, y + 20);
+    cbCtx.lineTo(x + 15, y + 20);
+    cbCtx.lineTo(x + 18, y + 18);
+    cbCtx.closePath();
+    cbCtx.fill();
+
   } else if (Constants.Direction.UP === direction || Constants.Direction.DOWN === direction) {
     cbCtx.beginPath();
-    cbCtx.strokeStyle = Constants.Color.JUMP_MARK;
+    cbCtx.fillStyle = detailColor;
     cbCtx.moveTo(x + 2, y + 2);
     cbCtx.lineTo(x + 4, y + 5);
     cbCtx.lineTo(x + 4, y + 15);
     cbCtx.lineTo(x + 2, y + 18);
-    cbCtx.stroke();
+    cbCtx.moveTo(x + 2, y + 2);
+    cbCtx.lineTo(x + 0, y + 5);
+    cbCtx.lineTo(x + 0, y + 15);
+    cbCtx.lineTo(x + 2, y + 18);
 
+    cbCtx.closePath();
+    cbCtx.fill();
     cbCtx.beginPath();
-    cbCtx.strokeStyle = Constants.Color.JUMP_MARK;
+    cbCtx.fillStyle = detailColor;
     cbCtx.moveTo(x + 18, y + 2);
     cbCtx.lineTo(x + 16, y + 5);
     cbCtx.lineTo(x + 16, y + 15);
     cbCtx.lineTo(x + 18, y + 18);
-    cbCtx.stroke();
+    cbCtx.moveTo(x + 18, y + 2);
+    cbCtx.lineTo(x + 20, y + 5);
+    cbCtx.lineTo(x + 20, y + 15);
+    cbCtx.lineTo(x + 18, y + 18);
+    cbCtx.closePath();
+    cbCtx.fill();
   }
 
 }

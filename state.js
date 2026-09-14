@@ -48,7 +48,8 @@ const gameBoardData = {
   killingFruitCount: 0,
   choosenSpeed: '3',
   extraLocationData: new Map(),
-  showingBareBones: true
+  showingBareBones: true,
+  jumpedThingsData: new Map()
 }
 
 export const GBD = gameBoardData;
