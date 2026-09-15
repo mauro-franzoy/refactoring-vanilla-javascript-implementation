@@ -102,8 +102,23 @@ body {
   margin-top: 5px;
 }
 
+.canvas-board-container {
+  position: relative;
+}
+
 .game-canvas {
   border: 1px solid var(--bg-main);
+}
+
+.jump-indicator{
+  position: absolute; 
+  top: 0px;          
+  right: 0px;  
+  margin-top: 2px;
+  margin-right: 2px;
+  z-index: 2;       
+  background-color: LightSteelBlue;
+  color: red;
 }
 
 .right-panel {

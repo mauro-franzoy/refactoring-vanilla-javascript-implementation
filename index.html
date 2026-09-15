@@ -7,9 +7,9 @@
 
   <title>A vanilla JavaScript implementation</title>
 
-  <link rel="stylesheet" href="resources/v1.0.17/style.css">
+  <link rel="stylesheet" href="resources/v1.0.18/style.css">
 
-  <script type="module" src="resources/v1.0.17/main.js"></script>
+  <script type="module" src="resources/v1.0.18/main.js"></script>
 
 </head>
 
@@ -102,8 +102,10 @@
         </div>
 
       </div>
-      <div id="canvas-board-container">
-        <canvas id="canvas-board" class="game-canvas" width="480" height="480"></canvas>
+      <div id="canvas-board-container" class="canvas-board-container">
+        <canvas id="canvas-board" class="game-canvas" width="480" height="480">
+        </canvas>
+        <div id="jump-indicator" class="jump-indicator">jumping</div>
       </div>
 
       <div id="right-panel" class="right-panel">

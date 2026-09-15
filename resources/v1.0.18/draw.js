@@ -121,7 +121,7 @@ function getColorByJumpedContent(content) {
   } else if (content == Constants.CellContent.FRUIT) {
     return Constants.Color.FRUIT;
   } else if (content == Constants.CellContent.BODY) {
-    return Constants.Color.JUMP_MARK;
+    return Constants.Color.JUMPING_BODY;
   }
 }
 
@@ -143,61 +143,42 @@ function drawJumpDetails(position, color) {
   let formerCellContent = State.GBD.jumpedThingsData.get(key);
   let detailColor = getColorByJumpedContent(formerCellContent);
 
+  cbCtx.lineWidth = 1;
   if (Constants.Direction.RIGHT === direction || Constants.Direction.LEFT === direction) {
     cbCtx.beginPath();
-    cbCtx.fillStyle = detailColor;
+    cbCtx.strokeStyle = detailColor;
     cbCtx.moveTo(x + 2, y + 2);
-    cbCtx.lineTo(x + 5, y + 4);
-    cbCtx.lineTo(x + 15, y + 4);
+    cbCtx.lineTo(x + 5, y + 1);
+    cbCtx.lineTo(x + 15, y + 1);
     cbCtx.lineTo(x + 18, y + 2);
-    cbCtx.moveTo(x + 2, y + 2);
-    cbCtx.lineTo(x + 5, y + 0);
-    cbCtx.lineTo(x + 15, y + 0);
-    cbCtx.lineTo(x + 18, y + 2);
-    cbCtx.closePath();
-    cbCtx.fill();
+    cbCtx.stroke();
 
     cbCtx.beginPath();
-    cbCtx.fillStyle = detailColor;
+    cbCtx.strokeStyle = detailColor;
     cbCtx.moveTo(x + 2, y + 18);
-    cbCtx.lineTo(x + 5, y + 16);
-    cbCtx.lineTo(x + 15, y + 16);
+    cbCtx.lineTo(x + 5, y + 19);
+    cbCtx.lineTo(x + 15, y + 19);
     cbCtx.lineTo(x + 18, y + 18);
-    cbCtx.moveTo(x + 2, y + 18);
-    cbCtx.lineTo(x + 5, y + 20);
-    cbCtx.lineTo(x + 15, y + 20);
-    cbCtx.lineTo(x + 18, y + 18);
-    cbCtx.closePath();
-    cbCtx.fill();
+    cbCtx.stroke();
 
   } else if (Constants.Direction.UP === direction || Constants.Direction.DOWN === direction) {
     cbCtx.beginPath();
-    cbCtx.fillStyle = detailColor;
+    cbCtx.strokeStyle = detailColor;
     cbCtx.moveTo(x + 2, y + 2);
-    cbCtx.lineTo(x + 4, y + 5);
-    cbCtx.lineTo(x + 4, y + 15);
+    cbCtx.lineTo(x + 1, y + 5);
+    cbCtx.lineTo(x + 1, y + 15);
     cbCtx.lineTo(x + 2, y + 18);
-    cbCtx.moveTo(x + 2, y + 2);
-    cbCtx.lineTo(x + 0, y + 5);
-    cbCtx.lineTo(x + 0, y + 15);
-    cbCtx.lineTo(x + 2, y + 18);
+    cbCtx.stroke();
 
-    cbCtx.closePath();
-    cbCtx.fill();
     cbCtx.beginPath();
-    cbCtx.fillStyle = detailColor;
+    cbCtx.strokeStyle = detailColor;
     cbCtx.moveTo(x + 18, y + 2);
-    cbCtx.lineTo(x + 16, y + 5);
-    cbCtx.lineTo(x + 16, y + 15);
+    cbCtx.lineTo(x + 19, y + 5);
+    cbCtx.lineTo(x + 19, y + 15);
     cbCtx.lineTo(x + 18, y + 18);
-    cbCtx.moveTo(x + 18, y + 2);
-    cbCtx.lineTo(x + 20, y + 5);
-    cbCtx.lineTo(x + 20, y + 15);
-    cbCtx.lineTo(x + 18, y + 18);
-    cbCtx.closePath();
-    cbCtx.fill();
+    cbCtx.stroke();
   }
-
+  return;
 }
 
 function drawLittlePlayerBodyJump(position, toggle) {
@@ -447,6 +428,8 @@ function drawLittlePlayerHeadWithColor(color) {
   cbCtx.fillStyle = Constants.Color.SOIL;
   cbCtx.fillRect(x, y, 20, 20);
 
+
+
   if (headDirection === Constants.Direction.RIGHT) {
 
     // head
@@ -545,7 +528,18 @@ function drawLittlePlayerHeadWithColor(color) {
     cbCtx.fillRect(x + 13, y + 13, 2, 3);
 
   }
+  drawHeadJumping(headPosition, headDirection);
   reDrawLittlePlayerHeadSourroundingsToHideOldTongue();
+}
+
+function drawHeadJumping(headPosition, direction) {
+
+  let key = State.locationToKey(headPosition);
+  let formerCellContent = State.GBD.jumpedThingsData.get(key);
+
+  if (formerCellContent != undefined) {
+    drawJumpDetails(headPosition, direction);
+  }
 }
 
 function reDrawLittlePlayerHeadSourroundingsToHideOldTongue() {

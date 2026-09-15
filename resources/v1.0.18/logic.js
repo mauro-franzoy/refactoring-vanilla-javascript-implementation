@@ -394,6 +394,12 @@ function markTheJump() {
 }
 
 function gameCycle() {
+  let jumpingIndicator = getById('jump-indicator');
+  if (State.LPD.jumped>0) {
+    jumpingIndicator.style.color = Constants.Color.ALERT;
+  } else {
+    jumpingIndicator.style.color = Constants.Color.WALL;
+  }
   placeFruit();
   placeKillingFruit();
   calculateHeadDirection();

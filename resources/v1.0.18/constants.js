@@ -19,7 +19,9 @@ export const Color = Object.freeze({
   LEAF: 'green',
   SHINE: 'white',
   EYE: 'green',
-  JUMP_MARK: 'DarkOrange'
+  JUMP_MARK: 'DarkOrange',
+  JUMPING_BODY: 'Black',
+  ALERT: 'red'
 });
 
 export const KeyboardKey = Object.freeze({
