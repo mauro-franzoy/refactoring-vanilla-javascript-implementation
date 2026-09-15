@@ -265,7 +265,7 @@ function processKeydown(event) {
 
 }
 
-export function aDelay(millis) {
+function aDelay(millis) {
   return new Promise((resolve) => {
     setTimeout(resolve, millis);
   });

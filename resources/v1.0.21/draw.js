@@ -71,7 +71,7 @@ function translateCharBoardToCanvas() {
   }
 }
 
-export function drawRawCellContent(location, block) {
+function drawRawCellContent(location, block) {
 
   let rowNumber = location[0];
   let colNumber = location[1];
@@ -131,7 +131,7 @@ function drawFruit(position, mainColor) {
   drawShine(position, Constants.Color.SHINE);
 }
 
-export function drawSquare(position, cellContent) {
+function drawSquare(position, cellContent) {
 
   if (cellContent === Constants.CellContent.SPACE) {
     drawSoil(position);
@@ -633,7 +633,7 @@ function reDrawLittlePlayerHeadSourroundingsToHideOldTongue() {
 
 }
 
-export function clearHeadSourroundings() {
+function clearHeadSourroundings() {
   let headPosition = State.LPD.headPositionCurrent;
 
   let row = headPosition[0];
@@ -655,7 +655,7 @@ function reDrawSquare(positionToReDraw) {
   drawSquare(positionToReDraw, cellContent);
 }
 
-export async function drawPlayer() {
+async function drawPlayer() {
   let toggle = 0;
   while (true) {
     if (!State.RD.paused && !State.RD.gameOver && State.RD.gameStatus == Constants.GameStatus.RUNNING) {
@@ -692,7 +692,7 @@ function drawPlayerSync(toggle) {
   drawLittlePlayerHead();
 }
 
-export function drawPlayerDeathSync(toggle, color) {
+function drawPlayerDeathSync(toggle, color) {
   drawPlayerDeath(toggle, color);
 }
 
