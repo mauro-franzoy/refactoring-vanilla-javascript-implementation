@@ -527,6 +527,7 @@ function moveTailAhead() {
   if (nextPosContent === Constants.CellContent.JUMP) {
     let key = State.locationToKey(tailLocation);
     let formerCellContent = State.GBD.jumpedThingsData.get(key);
+    State.GBD.jumpedThingsData.delete(key);
     State.pushCellChange(tailLocation, formerCellContent);
   } else {
     State.pushCellChange(tailLocation, Constants.CellContent.SPACE);
