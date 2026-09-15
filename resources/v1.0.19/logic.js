@@ -1,6 +1,5 @@
 "use strict";
 
-import * as Draw from './draw.js';
 import * as State from './state.js';
 import * as Constants from './constants.js';
 
@@ -62,35 +61,9 @@ function doSomeInitialization() {
   State.storeRowOfCellContent("row-22", "W                      W");
   State.storeRowOfCellContent("row-23", "WWWWWWWWWWWWWWWWWWWWWWWW");
 
-  drawAllRawCells();
-
-  translateCharBoardToCanvas();
-
   toggleBareBones();
-}
 
-function drawAllRawCells() {
-  let position = null;
-  let cellContent = null;
-  for (let i = 0; i <= 23; i++) {
-    for (let j = 0; j <= 23; j++) {
-      position = [i, j];
-      cellContent = State.getCellContent(position);
-      Draw.drawRawCellContent(position, cellContent);
-    }
-  }
-}
-
-function translateCharBoardToCanvas() {
-  let position = null;
-  let cellContent = null;
-  for (let i = 0; i <= 23; i++) {
-    for (let j = 0; j <= 23; j++) {
-      position = [i, j];
-      cellContent = State.getCellContent(position);
-      Draw.drawSquare(position, cellContent);
-    }
-  }
+  State.RD.gameStatus = Constants.GameStatus.RUNNING;
 }
 
 function getRandomNumber() {
@@ -107,7 +80,7 @@ function placeFruit() {
     let cellContent = State.getCellContent(fruitPosition);
     if (cellContent === Constants.CellContent.SPACE) {
       State.GBD.fruitCount = State.GBD.fruitCount + 1;
-      placeCellContent(fruitPosition, Constants.CellContent.FRUIT);
+      State.pushCellChange(fruitPosition, Constants.CellContent.FRUIT);
     }
   }
 }
@@ -120,7 +93,7 @@ function placeKillingFruit() {
     let cellContent = State.getCellContent(killingPosition);
     if (cellContent === Constants.CellContent.SPACE && !nearHeadZone(killingPosition)) {
       State.GBD.killingFruitCount = State.GBD.killingFruitCount + 1;
-      placeCellContent(killingPosition, Constants.CellContent.KILLING_FRUIT);
+      State.pushCellChange(killingPosition, Constants.CellContent.KILLING_FRUIT);
       kfsList[kfsPointer] = killingPosition;
       increseKFP();
     }
@@ -335,7 +308,6 @@ function showSpeed() {
 export async function play() {
   setSpeed();
   doSomeInitialization();
-  Draw.drawPlayer();
   while (!State.RD.gameOver) {
     checkForSpecialKeys();
     if (!State.RD.paused) {
@@ -390,7 +362,7 @@ function checkForSpecialKeys() {
 }
 
 function markTheJump() {
-  placeCellContent(State.LPD.headPositionNext, Constants.CellContent.JUMP);
+  State.pushCellChange(State.LPD.headPositionNext, Constants.CellContent.JUMP);
 }
 
 function gameCycle() {
@@ -425,12 +397,11 @@ function gameCycle() {
       // nothing
     } else {
       movePlayerAhead();
-      Draw.drawPlayerDeathSync(1, Constants.Color.JUMP_MARK);
+      State.RD.gameStatus = Constants.GameStatus.DEATH_BY_BODY;
       doGameOver("you stomp on yourself!!!");
     }
   } else if (nextCellContent === Constants.CellContent.WALL) {
-    Draw.clearHeadSourroundings();
-    Draw.drawPlayerDeathSync(1, Constants.Color.WALL);
+    State.RD.gameStatus = Constants.GameStatus.DEATH_BY_WALL;
     doGameOver("you hit a wall!!!");
   } else if (nextCellContent === Constants.CellContent.KILLING_FRUIT) {
      if ((State.LPD.jumped > 0)) {
@@ -489,7 +460,7 @@ function growPlayerAhead() {
 function growToDeath() {
   State.GBD.fruitCount = State.GBD.fruitCount - 1;
   moveHeadAhead();
-  Draw.drawPlayerDeathSync(1, Constants.Color.KILLING_FRUIT);
+  State.RD.gameStatus = Constants.GameStatus.DEATH_BY_POISONOUS_FRUIT;
   doGameOver("you eat a killing fruit!!!");
 }
 
@@ -501,7 +472,7 @@ function moveKillingFruit() {
   if (killingLocation !== undefined) {
     let kfLocationContent = State.getCellContent(killingLocation);
     if (kfLocationContent === Constants.CellContent.KILLING_FRUIT) {
-      placeCellContent(killingLocation, Constants.CellContent.SPACE);
+      State.pushCellChange(killingLocation, Constants.CellContent.SPACE);
       increseKFP();
       State.GBD.killingFruitCount = State.GBD.killingFruitCount - 1;
     }
@@ -524,7 +495,7 @@ function moveHeadAhead() {
   if (currentPosContent === Constants.CellContent.JUMP) {
     // nothing
   } else {
-    placeCellContent(State.LPD.headPositionCurrent, Constants.CellContent.BODY);
+    State.pushCellChange(State.LPD.headPositionCurrent, Constants.CellContent.BODY);
   }
 
   let keyForBody = State.locationToKey(State.LPD.headPositionCurrent);
@@ -534,7 +505,7 @@ function moveHeadAhead() {
   if (nextPosContent === Constants.CellContent.JUMP) {
     // nothing
   } else {
-    placeCellContent(State.LPD.headPositionNext, Constants.CellContent.HEAD);
+    State.pushCellChange(State.LPD.headPositionNext, Constants.CellContent.HEAD);
   }
 
   let keyForHead = State.locationToKey(State.LPD.headPositionNext);
@@ -556,9 +527,9 @@ function moveTailAhead() {
   if (nextPosContent === Constants.CellContent.JUMP) {
     let key = State.locationToKey(tailLocation);
     let formerCellContent = State.GBD.jumpedThingsData.get(key);
-    placeCellContent(tailLocation, formerCellContent);
+    State.pushCellChange(tailLocation, formerCellContent);
   } else {
-    placeCellContent(tailLocation, Constants.CellContent.SPACE);
+    State.pushCellChange(tailLocation, Constants.CellContent.SPACE);
   }
 
   State.LPD.removeLocationAtIndex(State.LPD.playerTailIndex);
@@ -613,12 +584,6 @@ function processTap(event) {
     
   }
   
-}
-
-function placeCellContent(location, block) {
-  Draw.drawSquare(location, block);
-  Draw.drawRawCellContent(location, block)
-  State.storeCellContent(location, block);
 }
 
 export function attachEventHandlers() {

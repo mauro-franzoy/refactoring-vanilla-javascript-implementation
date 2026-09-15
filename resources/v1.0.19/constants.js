@@ -49,4 +49,11 @@ export const CellContent = Object.freeze({
   JUMP: 'J'
 });
 
+export const GameStatus = Object.freeze({
+  RUNNING: 'RUNNING',
+  DEATH_BY_WALL: 'DEATH_BY_WALL',
+  DEATH_BY_POISONOUS_FRUIT: 'DEATH_BY_POISONOUS_FRUIT',
+  DEATH_BY_BODY: 'DEATH_BY_BODY'
+});
+
 

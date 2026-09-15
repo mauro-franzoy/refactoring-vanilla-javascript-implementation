@@ -2,6 +2,17 @@
 
 import * as Constants from './constants.js';
 
+let cellChangeSubscriber = null;
+
+export function subscribeToCellChange(callback) {
+  cellChangeSubscriber = callback;
+}
+
+export function pushCellChange(location, block) {
+  storeCellContent(location, block);
+  cellChangeSubscriber(location, block); 
+}
+
 const littlePlayerData = {
 
   getLocationAtIndex: function (index) {
@@ -59,12 +70,13 @@ const runningData = {
   paused: false,
   delayInterval: 0,
   gameOver: false,
-  deathDelay: 45
+  deathDelay: 45,
+  gameStatus: Constants.GameStatus.STOPPED
 }
 
 export const RD = runningData;
 
-export function storeCellContent(location, block) {
+function storeCellContent(location, block) {
 
   let rowNumber = location[0];
   let colNumber = location[1];
@@ -96,3 +108,4 @@ export function getCellContent(location) {
 export function locationToKey(location) {
   return String(location[0]) + '_' + String(location[1]);
 }
+

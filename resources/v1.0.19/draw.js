@@ -3,6 +3,40 @@
 import * as State from './state.js';
 import * as Constants from './constants.js';
 
+function processCellChange(location, block) {
+  drawSquare(location, block);
+  drawRawCellContent(location, block);
+}
+
+export function subscribeToCellChanges(){
+  State.subscribeToCellChange(processCellChange)
+}
+
+let alreadyInitialRendering = false;
+
+export async function render() {
+  drawPlayer();
+  while (true) {
+    if (State.RD.gameStatus == Constants.GameStatus.RUNNING && !alreadyInitialRendering) {
+      drawAllRawCells();
+      translateCharBoardToCanvas();
+      alreadyInitialRendering = true;
+    }
+    if (State.RD.gameStatus == Constants.GameStatus.DEATH_BY_BODY) {
+      drawPlayerDeathSync(1, Constants.Color.JUMP_MARK);
+      return;
+    } else if (State.RD.gameStatus == Constants.GameStatus.DEATH_BY_WALL) {
+      clearHeadSourroundings();
+      drawPlayerDeathSync(1, Constants.Color.WALL);
+      return;
+    } else if (State.RD.gameStatus == Constants.GameStatus.DEATH_BY_POISONOUS_FRUIT) {
+      drawPlayerDeathSync(1, Constants.Color.KILLING_FRUIT);
+      return;
+    }
+    await aDelay(State.RD.delayInterval / 2);
+  }
+}
+
 let cbCtx = null;
 let canvasBoard = document.getElementById("canvas-board");
 cbCtx = canvasBoard.getContext("2d");
@@ -11,6 +45,30 @@ function aDelay(millis) {
   return new Promise((resolve) => {
     setTimeout(resolve, millis);
   });
+}
+
+function drawAllRawCells() {
+  let position = null;
+  let cellContent = null;
+  for (let i = 0; i <= 23; i++) {
+    for (let j = 0; j <= 23; j++) {
+      position = [i, j];
+      cellContent = State.getCellContent(position);
+      drawRawCellContent(position, cellContent);
+    }
+  }
+}
+
+function translateCharBoardToCanvas() {
+  let position = null;
+  let cellContent = null;
+  for (let i = 0; i <= 23; i++) {
+    for (let j = 0; j <= 23; j++) {
+      position = [i, j];
+      cellContent = State.getCellContent(position);
+      drawSquare(position, cellContent);
+    }
+  }
 }
 
 export function drawRawCellContent(location, block) {
@@ -75,17 +133,10 @@ function drawFruit(position, mainColor) {
 
 export function drawSquare(position, cellContent) {
 
-  if (cellContent === Constants.CellContent.HEAD ||
-    cellContent === Constants.CellContent.BODY ||
-    cellContent === Constants.CellContent.JUMP) {
-    // player parts are handled separately
-    return;
-  }
-
   if (cellContent === Constants.CellContent.SPACE) {
-    drawRawSquare(position, Constants.Color.SOIL);
+    drawSoil(position);
   } else if (cellContent === Constants.CellContent.WALL) {
-    drawRawSquare(position, Constants.Color.WALL);
+    drawWall(position);
   } else if (cellContent === Constants.CellContent.KILLING_FRUIT) {
     drawFruit(position, Constants.Color.KILLING_FRUIT);
     return;
@@ -93,6 +144,14 @@ export function drawSquare(position, cellContent) {
     drawFruit(position, Constants.Color.FRUIT);
     return;
   }
+}
+
+function drawSoil(position) {
+  drawRawSquare(position, Constants.Color.SOIL);
+}
+
+function drawWall(position) {
+  drawRawSquare(position, Constants.Color.WALL);
 }
 
 function drawRawSquare(position, color) {
@@ -599,7 +658,7 @@ function reDrawSquare(positionToReDraw) {
 export async function drawPlayer() {
   let toggle = 0;
   while (true) {
-    if (!State.RD.paused && !State.RD.gameOver) {
+    if (!State.RD.paused && !State.RD.gameOver && State.RD.gameStatus == Constants.GameStatus.RUNNING) {
       drawPlayerSync(toggle);
     }
     await aDelay(State.RD.delayInterval / 2);
