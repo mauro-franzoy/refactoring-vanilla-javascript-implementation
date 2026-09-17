@@ -411,6 +411,10 @@ function gameCycle() {
     } else {
       growToDeath();
     }
+  } else if (nextCellContent === Constants.CellContent.JUMP) {
+      movePlayerAhead();
+      State.setGameStatus(Constants.GameStatus.DEATH_BY_BODY);
+      doGameOver("You cannot cross a space that is currently being jumped over.");
   }
   State.setPlayerJumped(State.getPlayerJumped()-1);
 }
