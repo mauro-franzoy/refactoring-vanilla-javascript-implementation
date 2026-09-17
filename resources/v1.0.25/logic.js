@@ -414,7 +414,7 @@ function gameCycle() {
   } else if (nextCellContent === Constants.CellContent.JUMP) {
       movePlayerAhead();
       State.setGameStatus(Constants.GameStatus.DEATH_BY_BODY);
-      doGameOver("Cannot cross an active jump space.");
+      doGameOver("Crossing active jump space!!!");
   }
   State.setPlayerJumped(State.getPlayerJumped()-1);
 }
