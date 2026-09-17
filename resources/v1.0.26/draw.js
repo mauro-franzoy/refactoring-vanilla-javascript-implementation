@@ -507,8 +507,8 @@ function drawLittlePlayerHeadWithColor(color) {
 
     // eyes         
     cbCtx.fillStyle = Constants.Color.EYE;
-    cbCtx.fillRect(x + 13, y + 5, 3, 2);
-    cbCtx.fillRect(x + 13, y + 13, 3, 2);
+    cbCtx.fillRect(x + 13, y + 5, 4, 3);
+    cbCtx.fillRect(x + 13, y + 13, 4, 3);
 
 
 
@@ -533,8 +533,8 @@ function drawLittlePlayerHeadWithColor(color) {
 
     // eyes         
     cbCtx.fillStyle = Constants.Color.EYE;
-    cbCtx.fillRect(x + 4, y + 5, 3, 2);
-    cbCtx.fillRect(x + 4, y + 13, 3, 2);
+    cbCtx.fillRect(x + 4, y + 5, 4, 3);
+    cbCtx.fillRect(x + 4, y + 13, 4, 3);
 
   } else if (headDirection === Constants.Direction.UP) {
 
@@ -557,8 +557,8 @@ function drawLittlePlayerHeadWithColor(color) {
 
     // eyes         
     cbCtx.fillStyle = Constants.Color.EYE;
-    cbCtx.fillRect(x + 5, y + 4, 2, 3);
-    cbCtx.fillRect(x + 13, y + 4, 2, 3);
+    cbCtx.fillRect(x + 5, y + 4, 3, 4);
+    cbCtx.fillRect(x + 13, y + 4, 3, 4);
 
   } else if (headDirection === Constants.Direction.DOWN) {
 
@@ -580,8 +580,8 @@ function drawLittlePlayerHeadWithColor(color) {
 
     // eyes         
     cbCtx.fillStyle = Constants.Color.EYE;
-    cbCtx.fillRect(x + 5, y + 13, 2, 3);
-    cbCtx.fillRect(x + 13, y + 13, 2, 3);
+    cbCtx.fillRect(x + 5, y + 13, 3, 4);
+    cbCtx.fillRect(x + 13, y + 13, 3, 4);
 
   }
   drawHeadJumping(headPosition, headDirection);

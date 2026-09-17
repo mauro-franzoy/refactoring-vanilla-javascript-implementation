@@ -18,7 +18,7 @@ export const Color = Object.freeze({
   LEAF: 'darkgreen',
   LEAF: 'green',
   SHINE: 'white',
-  EYE: 'green',
+  EYE: 'Lime',
   JUMP_MARK: 'DarkOrange',
   JUMPING_BODY: 'Black',
   ALERT: 'red'
